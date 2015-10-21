@@ -1,0 +1,118 @@
+redis:
+  image: xdevelsistemas/debian-env:redis-env
+  ports:
+    - "6379:6379"
+  volumes:
+    - "/opt/dockerdata/redis:/data"
+mongodb:
+  image: xdevelsistemas/debian-env:mongodb-env
+  ports:
+    - "27017:27017"
+  volumes:
+    - "/opt/dockerdata/mongo:/data/db"
+#zookeeper:
+#  image: xdevelsistemas/mesosphere-docker:mesos-zookeeper
+#  ports:
+#    - "2181:2181"
+#    - "2888:2888"
+#    - "3888:3888"
+#  environment:
+#    - ZOOKEEPER_DATADIR=/var/lib/zookeeper
+#    - HOST_ID=1
+#    - ZOOKEEPER_TICK_TIME=2000
+#    - ZOOKEEPER_INIT_LIMIT=5
+#    - ZOOKEEPER_SYNC_LIMIT=2
+#    - _JAVA_OPTIONS="-Djava.net.preferIPv4Stack=true"
+#  restart: aways
+#mesosmaster:
+#  image: xdevelsistemas/mesosphere-docker:mesos-master
+#  links:
+#    - zookeeper
+#  ports:
+#    - "5050:5050"
+#  environment:
+#    - MESOS_HOSTNAME=mesos
+#    - MESOS_IP=0.0.0.0
+#    - MESOS_ZK=zk://zookeeper:2181/mesos
+#    - MESOS_PORT=5050
+#    - MESOS_QUORUM=1
+#    - MESOS_REGISTRY=in_memory
+#    - MESOS_LOG_DIR="/var/log/mesos"
+#    #configuracao adicional
+#    - MESOS_CLUSTER=main-cluster
+#  volumes:
+#    - "/run/docker.sock:/var/run/docker.sock"
+#    - "/sys/fs/cgroup:/sys/fs/cgroup"
+#  restart: aways
+##mesos slave
+#mesosslave:
+#   image: xdevelsistemas/mesosphere-docker:mesos-slave
+#   links:
+#     - zookeeper
+#     - mesosmaster
+#   ports:
+#     - "5051:5051"
+#   environment:
+#     - MESOS_HOSTNAME=mesos-slave
+#     - MESOS_IP=0.0.0.0
+#     - MESOS_QUORUM=1
+#     - MESOS_ZK=zk://zookeeper:2181/slave
+#     - MESOS_PORT=5051
+#     - MESOS_LOG_DIR=/var/log/slave
+#     - MESOS_MASTER=zk://zookeeper:2181/mesos
+#     - MESOS_LOG_DIR="/var/log/mesos"
+#     #configuracao adicional
+#     - MESOS_CLUSTER=main-cluster
+#   privileged: true
+#   volumes:
+#     - "/run/docker.sock:/var/run/docker.sock"
+#     - "/sys/fs/cgroup:/sys/fs/cgroup"
+#   restart: aways
+##marathon
+#marathon:
+#  image: xdevelsistemas/mesosphere-docker:mesos-marathon
+#  ports:
+#    - "8001:8001"
+#  links:
+#    - zookeeper
+#  environment:
+#    - MARATHON_HOSTNAME=marathon
+#    - MARATHON_HTTPS_ADDRESS=0.0.0.0
+#    - MARATHON_HTTP_ADDRESS=0.0.0.0
+#    - MARATHON_HTTP_PORT=8001
+#    - MARATHON_MASTER=zk://zookeeper:2181/mesos
+#    - MARATHON_ZK=zk://zookeeper:2181/marathon
+#  links:
+#    - zookeeper
+#  privileged: true
+#  restart: aways
+##chronos
+#chronos:
+#  image: xdevelsistemas/mesosphere-docker:mesos-chronos
+#  ports:
+#    - "8081:8080"
+#  environment:
+#    - CHRONOS_HOSTNAME=localhost
+#    - CHRONOS_HTTP_PORT=8080
+#    - CHRONOS_MASTER=zk://zookeeper:2181/mesos
+#    - CHRONOS_ZK_HOSTS=zookeeper:2181
+#  links:
+#    - zookeeper
+#  privileged: true
+#  restart: aways
+#
+#nginx:
+#  image: nginx:latest
+#  ports:
+#    - "8082:80"
+#  links:
+#    - zookeeper
+#    - mesosmaster
+#    - mesosslave
+#    - marathon
+#    - chronos
+#  volumes:
+#    - "/Users/clayton/dockerdata/nginx/nginx.conf:/etc/nginx/nginx.conf"
+#    - "/Users/clayton/dockerdata/nginx/hosts:/etc/hosts"
+#  privileged: true
+#  restart: aways
