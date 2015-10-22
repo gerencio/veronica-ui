@@ -40,7 +40,7 @@ gulp.task('html', ['styles'], function() {
   var lazypipe = require('lazypipe');
   var cssChannel = lazypipe()
     .pipe($.csso)
-    .pipe($.replace, 'public/bower_components/bootstrap/fonts', 'fonts');
+    .pipe($.replace, 'public/lib/bootstrap/fonts', 'fonts');
 
   var assets = $.useref.assets({searchPath: '{.tmp,app}'});
 
@@ -59,7 +59,7 @@ gulp.task('ejs', ['styles'], function() {
   var lazypipe = require('lazypipe');
   var cssChannel = lazypipe()
       .pipe($.csso)
-      .pipe($.replace, 'public/bower_components/bootstrap/fonts', 'fonts');
+      .pipe($.replace, 'public/lib/bootstrap/fonts', 'fonts');
 
   var assets = $.useref.assets({searchPath: '{.tmp,app}'});
 
@@ -85,7 +85,7 @@ gulp.task('images', function() {
 
 gulp.task('fonts', function() {
   return gulp.src(bower.concat('public/app/styles/fonts/**/*')
-    .concat('public/bower_components/bootstrap/fonts/*')
+    .concat('public/lib/bootstrap/fonts/*')
   )
     .pipe($.filter('**/*.{eot,svg,ttf,woff,woff2}'))
     .pipe($.flatten())

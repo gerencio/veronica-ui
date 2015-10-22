@@ -29,7 +29,7 @@ build/Release
 node_modules
 .idea
 public/.tmp
-public/bower_components
+public/app/lib
 public/dist
 dist
 

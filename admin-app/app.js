@@ -26,12 +26,12 @@ mongoose.connect(configDB.url); // connect to our database
 
 // view engine setup
 if (app.get('env') === 'development') {
-    app.set('views', path.join(__dirname, 'views'));
+    app.set('views', path.join(__dirname, 'public/app'));
 }else{
     app.set('views', path.join(__dirname, 'dist/views'));
 }
 
-app.set('view engine', 'ejs'); // set up ejs for templating
+app.set('view engine', 'html');
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
@@ -41,7 +41,7 @@ app.use(bodyParser.raw({limit: '50mb'})); // get information from html forms / l
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 if (app.get('env') === 'development') {
-    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(path.join(__dirname, 'public/app')));
 }else{
     app.use(express.static(path.join(__dirname, 'public/dist')));
 }
