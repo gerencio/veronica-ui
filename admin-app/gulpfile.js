@@ -22,8 +22,6 @@ gulp.task('styles', function() {
     .pipe(gulp.dest('public/.tmp/styles'));
 });
 
-
-
 gulp.task('jshint', function() {
   return gulp.src('public/app/scripts/**/*.js')
     .pipe($.jshint());
