@@ -1,20 +1,23 @@
-'use strict';
+(function () {
+  'use strict';
 
-/**
- * @ngdoc function
- * @name dashyAngular.controller:MainCtrl
- * @description
- * # MainCtrl
- * Controller of dashyAngular
- */
-angular.module('dashyAngular')
-  .controller('LoginCtrl', function($scope, $location) {
+  /**
+   * @ngdoc function
+   * @name dashyAngular.controller:MainCtrl
+   * @description
+   * # MainCtrl
+   * Controller of dashyAngular
+   */
+  angular.module('dashyAngular')
+    .controller('LoginCtrl', function($scope, $location) {
 
-    $scope.submit = function() {
+      $scope.submit = function() {
 
-      $location.path('/dashboard');
+        $location.path('/dashboard');
 
-      return false;
-    }
+        return false;
+      };
 
-  });
+    });
+
+})();

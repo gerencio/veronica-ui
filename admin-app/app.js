@@ -76,10 +76,12 @@ require('./routes/userRoutes')(app, passport);
 
 /// catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  //next(err);
-  res.render('404')
+    var err = new Error('Not Found');
+    err.status = 404;
+    //next(err);
+    //res.render('index');
+    res.redirect('/404'); // config SPA
+
 });
 
 /// error handlers
@@ -88,20 +90,27 @@ app.use(function (req, res, next) {
 if (app.get('env') === 'development') {
   app.use(function (err, req, res, next) {
     res.status(err.status || 500);
+    /*
     res.render('error', {
       message: err.message,
       error: err
     });
+    */
+    res.redirect('/500'); // config SPA
   });
 }else {
   // production error handler
   // no stacktraces leaked to user
   app.use(function (err, req, res, next) {
     res.status(err.status || 500);
-    res.render('500', {
-      message: err.message,
-      error: err
-    });
+      /*
+       res.render('error', {
+       message: err.message,
+       error: err
+       });
+       */
+      res.redirect('/500'); // config SPA
+
   });
 }
 

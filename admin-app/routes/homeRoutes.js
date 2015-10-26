@@ -10,14 +10,14 @@ module.exports = function (app, passport) {
     //404 ================================
     app.get('/404',
         function(req,res){
-            res.render('404')
+            res.redirect('/#/404');
         }
     );
 
     //500 ================================
     app.get('/500',
         function(req,res){
-            res.render('500')
+            res.redirect('/#/500');
         }
     );
 
