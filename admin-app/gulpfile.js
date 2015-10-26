@@ -22,22 +22,12 @@ gulp.task('styles', function() {
     .pipe(gulp.dest('public/.tmp/styles'));
 });
 
-// tratar erro do jshint
-var map = require('map-stream');
-var exitOnJshintError = map(function (file, cb) {
-  if (!file.jshint.success) {
-    console.error('jshint failed');
-    process.exit(1);
-  }
-});
 
 gulp.task('jshint', function() {
   return gulp.src('public/app/scripts/**/*.js')
     .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish'));
-    //.pipe(exitOnJshintError);
-    //.pipe($.jshint.reporter('fail'));
-
+    .pipe($.jshint.reporter('jshint-stylish'))
+    .pipe($.jshint.reporter('fail'));
 });
 
 gulp.task('jscs', function() {
