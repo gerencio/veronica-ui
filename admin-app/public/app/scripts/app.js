@@ -25,7 +25,9 @@
         'angulartics',
         'angulartics.google.analytics',
         'gridshore.c3js.chart',
-        'growlNotifications'
+        'growlNotifications',
+        'formly',
+        'formlyBootstrap'
         ])
      .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
         cfpLoadingBarProvider.latencyThreshold = 5;
@@ -64,7 +66,9 @@
                 .state('home', {
                     url: '/home',
                     parent: 'dashboard',
-                    templateUrl: 'views/pages/dashboard/home.html?v='+window.app_version
+                    templateUrl: 'views/pages/dashboard/home.html?v='+window.app_version,
+                    controller: 'HomeCtrl',
+                    controllerAs: 'home'
                 })
                 .state('404-page', {
                     url: '/404',
