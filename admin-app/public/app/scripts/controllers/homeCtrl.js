@@ -21,7 +21,6 @@
                     type: 'select',
                     templateOptions: {
                         label: 'Escolha abaixo:',
-                        placeholder: 'Escolha',
                         valueProp: 'value',
                         options: [
                             {
@@ -40,12 +39,15 @@
                     }
                 },
                 {
+                    template: '<hr />'
+                },
+                {
                     key: 'email',
                     type: 'input',
                     templateOptions: {
                         type: 'email',
-                        label: 'Email address',
-                        placeholder: 'Enter email'
+                        label: 'Seu email',
+                        placeholder: 'jonh@email.com'
                     }
                 },
                 {
@@ -53,19 +55,43 @@
                     type: 'input',
                     templateOptions: {
                         type: 'password',
-                        label: 'Password',
-                        placeholder: 'Password'
+                        label: 'Senha',
+                        placeholder: 'Senha'
                     }
                 },
                 {
                     key: 'checked',
                     type: 'checkbox',
                     templateOptions: {
-                        label: 'Check me out'
+                        label: 'Estou de bom humor'
+                    }
+                },
+                {
+                    type: "textarea",
+                    key: "about",
+                    templateOptions: {
+                        label: "No que está pensando?",
+                        placeholder: "em um hotdog...",
+                        rows: 4,
+                        cols: 15
+                    },
+                    expressionProperties: {
+                        'templateOptions.disabled': '!model.checked'
                     }
                 }
             ];
 
+            vm.addInput = function(){
+                vm.userFields.push({
+                    key: 'new',
+                    type: 'input',
+                    templateOptions: {
+                        type: 'text',
+                        label: 'Novo input',
+                        placeholder: 'Surpresa!!!'
+                    }
+                });
+            }
 
         });
 
