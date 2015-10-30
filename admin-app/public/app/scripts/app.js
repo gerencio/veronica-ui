@@ -70,6 +70,13 @@
                     controller: 'HomeCtrl',
                     controllerAs: 'home'
                 })
+                .state('mesos', {
+                    url: '/mesos',
+                    parent: 'dashboard',
+                    templateUrl: 'views/pages/mesos/home.html?v='+window.app_version,
+                    controller: 'MesosHomeCtrl',
+                    controllerAs: 'mesos'
+                })
                 .state('404-page', {
                     url: '/404',
                     parent: 'boxed',
