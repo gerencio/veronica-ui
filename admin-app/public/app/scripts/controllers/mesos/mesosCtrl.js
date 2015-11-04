@@ -14,7 +14,7 @@
     // Invokes the pailer for the specified host and path using the
     // specified window_title.
     function pailer(host, path, window_title) {
-        var url = '//' + host + '/files/read.json?path=' + path;
+        var url = '//' + host + '/mesos/files/read.json?path=' + path;
         var pailer =
             window.open('/static/pailer.html', url, 'width=580px, height=700px');
 
@@ -70,7 +70,7 @@
                 var countdown = function() {
                     if ($scope.redirect == 0) {
                         // TODO(benh): Use '$window'.
-                        window.location = '/master/redirect';
+                        window.location = '/mesos/master/redirect';
                     } else {
                         $scope.redirect = $scope.redirect - 1000;
                         $timeout(countdown, 1000);
@@ -220,7 +220,6 @@
 
             // Adding bindings into scope so that they can be used from within
             // AngularJS expressions.
-            $scope._ = _;
             $scope.stringify = JSON.stringify;
             $scope.encodeURIComponent = encodeURIComponent;
             $scope.basename = function(path) {
@@ -276,7 +275,10 @@
             });
 
             var poll = function() {
-                $http.get('master/state.json',
+
+//                console.log("foi poll");
+
+                $http.get('/mesos/master/state.json',
                     {transformResponse: function(data) { return data; }})
                     .success(function(data) {
                         if (update($scope, $timeout, data)) {
@@ -335,10 +337,28 @@
             };
 
             poll();
+
+            $scope.log = function($event) {
+                if (!$scope.state.external_log_file && !$scope.state.log_dir) {
+                    $dialog.messageBox(
+                        'Logging to a file is not enabled',
+                        "Set the 'external_log_file' or 'log_dir' option if you wish to access the logs.",
+                        [{label: 'Continue'}]
+                    ).open();
+                } else {
+                    pailer(
+                        $scope.$location.host() + ':' + $scope.$location.port(),
+                        '/mesos/master/log',
+                        'Mesos Master');
+                }
+            };
+
+
+
         }]);
 
 
-    mesosApp.controller('MesosHomeCtrl', function($dialog, $scope) {
+    mesosApp.controller('MesosHomeCtrl', function($scope) {
         $scope.log = function($event) {
             if (!$scope.state.external_log_file && !$scope.state.log_dir) {
                 $dialog.messageBox(
@@ -349,7 +369,7 @@
             } else {
                 pailer(
                     $scope.$location.host() + ':' + $scope.$location.port(),
-                    '/master/log',
+                    '/mesos/master/log',
                     'Mesos Master');
             }
         };
@@ -421,7 +441,7 @@
                     $top.start(host, $scope);
                 }
 
-                $http.jsonp('//' + host + '/' + id + '/state.json?jsonp=JSON_CALLBACK')
+                $http.jsonp('//' + host + '/mesos/' + id + '/state.json?jsonp=JSON_CALLBACK')
                     .success(function (response) {
                         $scope.state = response;
 
@@ -499,7 +519,7 @@
                     $top.start(host, $scope);
                 }
 
-                $http.jsonp('//' + host + '/' + id + '/state.json?jsonp=JSON_CALLBACK')
+                $http.jsonp('//' + host + '/mesos/' + id + '/state.json?jsonp=JSON_CALLBACK')
                     .success(function (response) {
                         $scope.state = response;
 
@@ -572,7 +592,7 @@
                     $top.start(host, $scope);
                 }
 
-                $http.jsonp('//' + host + '/' + id + '/state.json?jsonp=JSON_CALLBACK')
+                $http.jsonp('//' + host + '/mesos/' + id + '/state.json?jsonp=JSON_CALLBACK')
                     .success(function (response) {
                         $scope.state = response;
 
@@ -677,7 +697,7 @@
 
             // Request slave details to get access to the route executor's "directory"
             // to navigate directly to the executor's sandbox.
-            $http.jsonp('//' + host + '/' + id + '/state.json?jsonp=JSON_CALLBACK')
+            $http.jsonp('//' + host + '/mesos/' + id + '/state.json?jsonp=JSON_CALLBACK')
                 .success(function(response) {
 
                     function matchFramework(framework) {
@@ -747,7 +767,7 @@
                 var hostname = $scope.slaves[$routeParams.slave_id].hostname;
                 var id = pid.substring(0, pid.indexOf('@'));
                 var host = hostname + ":" + pid.substring(pid.lastIndexOf(':') + 1);
-                var url = '//' + host + '/files/browse.json?jsonp=JSON_CALLBACK';
+                var url = '//' + host + '/mesos/files/browse.json?jsonp=JSON_CALLBACK';
 
                 $scope.slave_host = host;
 

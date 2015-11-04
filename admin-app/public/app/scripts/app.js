@@ -75,8 +75,7 @@
                     url: '/mesos',
                     parent: 'dashboard',
                     templateUrl: 'views/pages/mesos/home.html?v='+window.app_version,
-                    controller: 'MesosHomeCtrl',
-                    controllerAs: 'mesos'
+                    controller: 'MainCntl'
                 })
                 .state('404-page', {
                     url: '/404',
@@ -97,6 +96,7 @@
                 $('body').addClass('box-section');
             }
         })
+        // ---- filters do MESOS ---- //
         .filter('truncateMesosID', function() {
             return function(id) {
                 if (id) {
