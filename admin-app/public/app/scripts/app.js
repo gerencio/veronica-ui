@@ -71,10 +71,36 @@
                     controller: 'HomeCtrl',
                     controllerAs: 'home'
                 })
-                .state('mesos', {
-                    url: '/mesos',
+                .state('mesos/home', {
+                    url: '/mesos/home',
                     parent: 'dashboard',
                     templateUrl: 'views/pages/mesos/home.html?v='+window.app_version,
+                    controller: 'MainCntl'
+                })
+                .state('mesos/frameworks', {
+                    url: '/mesos/frameworks',
+                    parent: 'dashboard',
+                    templateUrl: 'views/pages/mesos/frameworks.html?v='+window.app_version,
+                    controller: 'MainCntl'
+                })
+                /*
+                .state('mesos/frameworks/:id', {
+                    url: '/mesos/frameworks/:id',
+                    parent: 'dashboard',
+                    templateUrl: 'views/pages/mesos/frameworks.html?v='+window.app_version,
+                    controller: 'FrameworksCtrl'
+                })
+                */
+                .state('mesos/slaves', {
+                    url: '/mesos/slaves',
+                    parent: 'dashboard',
+                    templateUrl: 'views/pages/mesos/slaves.html?v='+window.app_version,
+                    controller: 'MainCntl'
+                })
+                .state('mesos/offers', {
+                    url: '/mesos/offers',
+                    parent: 'dashboard',
+                    templateUrl: 'views/pages/mesos/offers.html?v='+window.app_version,
                     controller: 'MainCntl'
                 })
                 .state('404-page', {
@@ -166,6 +192,128 @@
                     return (bytes / BYTES_PER_GB).toFixed(1) + ' GB';
                 }
             };
-        });
+        })
+        .directive('mTimestamp', [ '$rootScope', function($rootScope) {
+            return {
+                restrict: 'E',
+                transclude: true,
+                scope: {
+                    value: '@'
+                },
+                link: function($scope, element, attrs) {
+                    $scope.longDate = JSON.parse(
+                        localStorage.getItem('longDate') || false);
+
+                    $scope.$on('mTimestamp.toggle', function() {
+                        $scope.longDate = !$scope.longDate;
+                    });
+
+                    $scope.toggle = function() {
+                        localStorage.setItem('longDate', !$scope.longDate);
+                        $rootScope.$broadcast('mTimestamp.toggle');
+                    };
+                },
+                templateUrl: 'scripts/directives/mesos/timestamp.html'
+            }
+        }])
+        .directive('mTable', ['$compile', '$filter', function($compile, $filter) {
+            /* This directive does not have a template. The DOM doesn't like
+             * having partially defined tables and so they don't work well with
+             * directives and templates. Because of this, the sub-elements that this
+             * includes are their own directive/templates and it adds them via. DOM
+             * manipulation here.
+             */
+            return {
+                scope: true,
+                link: function(scope, element, attrs) {
+                    var defaultOrder = true;
+
+                    _.extend(scope, {
+                        originalData: [],
+                        columnKey: '',
+                        sortOrder: defaultOrder,
+                        pgNum: 1,
+                        pageLength: 50,
+                        filterTerm: '',
+                        headerTitle: attrs.title
+                    })
+                    // ---
+
+                    // --- Allow sorting by column based on the <th> data-key attr
+                    var th = element.find('th');
+                    th.attr('ng-click', 'sortColumn($event)');
+                    $compile(th)(scope);
+
+                    var setSorting = function(el) {
+                        var key = el.attr('data-key');
+
+                        if (scope.columnKey === key) {
+                            scope.sortOrder = !scope.sortOrder;
+                        }
+                        else { scope.sortOrder = defaultOrder }
+
+                        scope.columnKey = key;
+
+                        th.removeClass('descending ascending');
+                        el.addClass(scope.sortOrder ? 'descending' : 'ascending');
+                    };
+
+                    var defaultSortColumn = function() {
+                        var el = element.find('[data-sort]');
+                        if (el.length === 0) {
+                            el = element.find('th:first');
+                        }
+                        return el;
+                    };
+
+                    scope.sortColumn = function(ev) {
+                        setSorting(angular.element(ev.target));
+                    };
+
+                    setSorting(defaultSortColumn());
+                    // ---
+
+                    scope.$watch(attrs.tableContent, function(data) {
+                        if (!data) { scope.originalData = []; return };
+                        if (angular.isObject(data)) { data = _.values(data) }
+
+                        scope.originalData = data;
+                    });
+
+                    var setTableData = function() {
+                        scope.filteredData = $filter('filter')(scope.originalData, scope.filterTerm)
+                        scope.$data = $filter('orderBy')(
+                            scope.filteredData,
+                            scope.columnKey,
+                            scope.sortOrder).slice(
+                            (scope.pgNum - 1) * scope.pageLength,
+                            scope.pgNum * scope.pageLength);
+                    };
+
+                    // Reset the page number for each new filtering.
+                    scope.$watch('filterTerm', function() { scope.pgNum = 1; });
+
+                    _.each(['originalData', 'columnKey', 'sortOrder', 'pgNum', 'filterTerm'],
+                        function(k) { scope.$watch(k, setTableData); });
+
+                    // --- Pagination controls
+                    var el = angular.element('<div m-pagination></div>');
+                    $compile(el)(scope);
+                    element.after(el);
+                    // ---
+
+                    // --- Filtering
+                    var el = angular.element('<div m-table-header></div>');
+                    $compile(el)(scope);
+                    element.before(el);
+                    // ---
+                }
+            };
+        }]);
+
+
+
+
+
 
 })();

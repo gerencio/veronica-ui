@@ -9323,3 +9323,8 @@ growl-notifications growl-notification.growl-warning {
     transform: rotate(360deg);
   }
 }
+
+time {
+  border-bottom: 1px #999 dashed;
+  cursor: pointer;
+}
