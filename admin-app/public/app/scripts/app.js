@@ -13,6 +13,7 @@
 
     angular
     .module('dashyAngular', [
+        'ngRoute',
         'ui.router',
         'ngAnimate',
         'ui.bootstrap',
@@ -29,7 +30,7 @@
         'formly',
         'formlyBootstrap',
         'mesos.services'
-        ])
+    ])
      .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
         cfpLoadingBarProvider.latencyThreshold = 5;
           cfpLoadingBarProvider.includeSpinner = false;
@@ -43,15 +44,14 @@
                 .state('plain', {
                     abstract: true,
                     url: '',
-                    templateUrl: 'views/layouts/plain.html?v='+window.app_version,
+                    templateUrl: 'views/layouts/plain.html?v='+window.app_version
                 })
                 .state('boxed', {
                     abstract: true,
                     url: '',
                     parent: 'plain',
-                    templateUrl: 'views/layouts/boxed.html?v='+window.app_version,
+                    templateUrl: 'views/layouts/boxed.html?v='+window.app_version
                 })
-
                 .state('login', {
                     url: '/login',
                     parent: 'boxed',
@@ -71,35 +71,73 @@
                     controller: 'HomeCtrl',
                     controllerAs: 'home'
                 })
-                .state('mesos/home', {
-                    url: '/mesos/home',
+
+
+                .state('mesos', {
+                    url: '/mesos',
                     parent: 'dashboard',
+                    templateUrl: 'views/pages/mesos/mesos.html?v='+window.app_version,
+                    controller: 'MainCntl'
+                })
+                .state('homeMesos', {
+                    url: '/homeMesos',
+                    parent: 'mesos',
                     templateUrl: 'views/pages/mesos/home.html?v='+window.app_version,
-                    controller: 'MainCntl'
+                    controller: 'MesosHomeCtrl'
                 })
-                .state('mesos/frameworks', {
-                    url: '/mesos/frameworks',
-                    parent: 'dashboard',
-                    templateUrl: 'views/pages/mesos/frameworks.html?v='+window.app_version,
-                    controller: 'MainCntl'
-                })
-                /*
-                .state('mesos/frameworks/:id', {
-                    url: '/mesos/frameworks/:id',
-                    parent: 'dashboard',
+                .state('frameworks', {
+                    url: '/frameworks',
+                    parent: 'mesos',
                     templateUrl: 'views/pages/mesos/frameworks.html?v='+window.app_version,
                     controller: 'FrameworksCtrl'
                 })
-                */
-                .state('mesos/slaves', {
-                    url: '/mesos/slaves',
-                    parent: 'dashboard',
-                    templateUrl: 'views/pages/mesos/slaves.html?v='+window.app_version,
-                    controller: 'MainCntl'
+                .state('frameworks/:id', {
+                    url: '/frameworks/:id',
+                    parent: 'mesos',
+                    templateUrl: 'views/pages/mesos/framework.html?v='+window.app_version,
+                    controller: 'FrameworkCtrl'
                 })
-                .state('mesos/offers', {
-                    url: '/mesos/offers',
-                    parent: 'dashboard',
+                .state('slaves', {
+                    url: '/slaves',
+                    parent: 'mesos',
+                    templateUrl: 'views/pages/mesos/slaves.html?v='+window.app_version,
+                    controller: 'SlavesCtrl'
+                })
+                .state('slaves/:slave_id', {
+                    url: '/slaves/:slave_id',
+                    parent: 'mesos',
+                    templateUrl: 'views/pages/mesos/slave.html?v='+window.app_version,
+                    controller: 'SlaveCtrl'
+                })
+                .state('slaves/:slave_id/frameworks/:framework_id', {
+                    url: '/slaves/:slave_id/frameworks/:framework_id',
+                    parent: 'mesos',
+                    templateUrl: 'views/pages/mesos/slaves.html?v='+window.app_version,
+                    controller: 'SlaveFrameworkCtrl'
+                })
+                .state('slaves/:slave_id/frameworks/:framework_id/executors/:executor_id', {
+                    url: '/slaves/:slave_id/frameworks/:framework_id/executors/:executor_id',
+                    parent: 'mesos',
+                    templateUrl: 'views/pages/mesos/slave_executor.html?v='+window.app_version,
+                    controller: 'SlaveExecutorCtrl'
+                })
+                .state('slaves/:slave_id/frameworks/:framework_id/executors/:executor_id/browse', {
+                    url: '/slaves/:slave_id/frameworks/:framework_id/executors/:executor_id/browse',
+                    parent: 'mesos',
+                    templateUrl: '',
+                    controller: 'SlaveExecutorRerouterCtrl'
+                })
+                .state('slaves/:slave_id/browse', {
+                    url: '/slaves/:slave_id/browse',
+                    parent: 'mesos',
+                    templateUrl: 'views/pages/mesos/browse.html?v='+window.app_version,
+                    controller: 'BrowseCtrl'
+                })
+
+
+                .state('offers', {
+                    url: '/offers',
+                    parent: 'mesos',
                     templateUrl: 'views/pages/mesos/offers.html?v='+window.app_version,
                     controller: 'MainCntl'
                 })

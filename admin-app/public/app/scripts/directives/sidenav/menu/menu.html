@@ -19,10 +19,10 @@
             <li class="sidenav-dropdown" ng-class="{'show-subnav': showingSubNav=='mesos'}" ng-mouseover="hoverCancel()">
                 <a class="subnav-toggle" href="javascript:;" ng-click="showSubNav('mesos')"><i class="fa fa-area-chart"></i> <span class="menu-text"> Mesos <i class="fa fa-angle-down fa-angle-down  pull</span>-right"></i></a>
                 <ul class="nav sidenav-sub-menu" collapse="showingSubNav!='mesos'">
-                    <li ng-class="{active: $state.includes('mesos/home')}"><a ui-sref="mesos/home"><i class="fa fa-bar-chart"></i> <span class="menu-text">Home</span></a></li>
-                    <li ng-class="{active: $state.includes('mesos/frameworks')}"><a ui-sref="mesos/frameworks"><i class="fa fa-bar-chart"></i> <span class="menu-text">Frameworks</span></a></li>
-                    <li ng-class="{active: $state.includes('mesos/slaves')}"><a ui-sref="mesos/slaves"><i class="fa fa-bar-chart"></i> <span class="menu-text">Slaves</span></a></li>
-                    <li ng-class="{active: $state.includes('mesos/offers')}"><a ui-sref="mesos/offers"><i class="fa fa-bar-chart"></i> <span class="menu-text">Offers</span></a></li>
+                    <li ng-class="{active: $state.includes('homeMesos')}"><a ui-sref="homeMesos"><i class="fa fa-bar-chart"></i> <span class="menu-text">Home</span></a></li>
+                    <li ng-class="{active: $state.includes('frameworks')}"><a ui-sref="frameworks"><i class="fa fa-bar-chart"></i> <span class="menu-text">Frameworks</span></a></li>
+                    <li ng-class="{active: $state.includes('slaves')}"><a ui-sref="slaves"><i class="fa fa-bar-chart"></i> <span class="menu-text">Slaves</span></a></li>
+                    <li ng-class="{active: $state.includes('offers')}"><a ui-sref="offers"><i class="fa fa-bar-chart"></i> <span class="menu-text">Offers</span></a></li>
                 </ul>
             </li>
         </ul>

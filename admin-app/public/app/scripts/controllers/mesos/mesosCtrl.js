@@ -220,6 +220,7 @@
 
             // Adding bindings into scope so that they can be used from within
             // AngularJS expressions.
+            $scope._ = _;
             $scope.stringify = JSON.stringify;
             $scope.encodeURIComponent = encodeURIComponent;
             $scope.basename = function(path) {
@@ -275,9 +276,6 @@
             });
 
             var poll = function() {
-
-//                console.log("foi poll");
-
                 $http.get('/mesos/master/state.json',
                     {transformResponse: function(data) { return data; }})
                     .success(function(data) {
@@ -337,8 +335,6 @@
             };
 
             poll();
-
-
         }]);
 
 
@@ -363,18 +359,18 @@
 
     mesosApp.controller('OffersCtrl', function() {});
 
-    mesosApp.controller('FrameworkCtrl', function($scope, $routeParams) {
+    mesosApp.controller('FrameworkCtrl', function($scope, $stateParams) {
         var update = function() {
-            if ($routeParams.id in $scope.completed_frameworks) {
-                $scope.framework = $scope.completed_frameworks[$routeParams.id];
+            if ($stateParams.id in $scope.completed_frameworks) {
+                $scope.framework = $scope.completed_frameworks[$stateParams.id];
                 $scope.alert_message = 'This framework has terminated!';
                 $('#alert').show();
                 $('#framework').show();
-            } else if ($routeParams.id in $scope.frameworks) {
-                $scope.framework = $scope.frameworks[$routeParams.id];
+            } else if ($stateParams.id in $scope.frameworks) {
+                $scope.framework = $scope.frameworks[$stateParams.id];
                 $('#framework').show();
             } else {
-                $scope.alert_message = 'No framework found with ID: ' + $routeParams.id;
+                $scope.alert_message = 'No framework found with ID: ' + $stateParams.id;
                 $('#alert').show();
             }
         };
@@ -392,19 +388,19 @@
 
 
     mesosApp.controller('SlaveCtrl', [
-        '$dialog', '$scope', '$routeParams', '$http', '$q', '$timeout', 'top',
-        function($dialog, $scope, $routeParams, $http, $q, $timeout, $top) {
-            $scope.slave_id = $routeParams.slave_id;
+        '$dialog', '$scope', '$stateParams', '$http', '$q', '$timeout', 'top',
+        function($dialog, $scope, $stateParams, $http, $q, $timeout, $top) {
+            $scope.slave_id = $stateParams.slave_id;
 
             var update = function() {
-                if (!($routeParams.slave_id in $scope.slaves)) {
-                    $scope.alert_message = 'No slave found with ID: ' + $routeParams.slave_id;
+                if (!($stateParams.slave_id in $scope.slaves)) {
+                    $scope.alert_message = 'No slave found with ID: ' + $stateParams.slave_id;
                     $('#alert').show();
                     return;
                 }
 
-                var pid = $scope.slaves[$routeParams.slave_id].pid;
-                var hostname = $scope.slaves[$routeParams.slave_id].hostname;
+                var pid = $scope.slaves[$stateParams.slave_id].pid;
+                var hostname = $scope.slaves[$stateParams.slave_id].hostname;
                 var id = pid.substring(0, pid.indexOf('@'));
                 var host = hostname + ":" + pid.substring(pid.lastIndexOf(':') + 1);
 
@@ -416,7 +412,7 @@
                             [{label: 'Continue'}]
                         ).open();
                     } else {
-                        pailer(host, '/slave/log', 'Mesos Slave');
+                        pailer(host, '/mesos/slave/log', 'Mesos Slave');
                     }
                 };
 
@@ -481,20 +477,20 @@
 
 
     mesosApp.controller('SlaveFrameworkCtrl', [
-        '$scope', '$routeParams', '$http', '$q', '$timeout', 'top',
-        function($scope, $routeParams, $http, $q, $timeout, $top) {
-            $scope.slave_id = $routeParams.slave_id;
-            $scope.framework_id = $routeParams.framework_id;
+        '$scope', '$stateParams', '$http', '$q', '$timeout', 'top',
+        function($scope, $stateParams, $http, $q, $timeout, $top) {
+            $scope.slave_id = $stateParams.slave_id;
+            $scope.framework_id = $stateParams.framework_id;
 
             var update = function() {
-                if (!($routeParams.slave_id in $scope.slaves)) {
-                    $scope.alert_message = 'No slave found with ID: ' + $routeParams.slave_id;
+                if (!($stateParams.slave_id in $scope.slaves)) {
+                    $scope.alert_message = 'No slave found with ID: ' + $stateParams.slave_id;
                     $('#alert').show();
                     return;
                 }
 
-                var pid = $scope.slaves[$routeParams.slave_id].pid;
-                var hostname = $scope.slaves[$routeParams.slave_id].hostname;
+                var pid = $scope.slaves[$stateParams.slave_id].pid;
+                var hostname = $scope.slaves[$stateParams.slave_id].hostname;
                 var id = pid.substring(0, pid.indexOf('@'));
                 var host = hostname + ":" + pid.substring(pid.lastIndexOf(':') + 1);
 
@@ -519,7 +515,7 @@
                             _.find($scope.state.completed_frameworks, matchFramework);
 
                         if (!$scope.framework) {
-                            $scope.alert_message = 'No framework found with ID: ' + $routeParams.framework_id;
+                            $scope.alert_message = 'No framework found with ID: ' + $stateParams.framework_id;
                             $('#alert').show();
                             return;
                         }
@@ -553,21 +549,21 @@
 
 
     mesosApp.controller('SlaveExecutorCtrl', [
-        '$scope', '$routeParams', '$http', '$q', '$timeout', 'top',
-        function($scope, $routeParams, $http, $q, $timeout, $top) {
-            $scope.slave_id = $routeParams.slave_id;
-            $scope.framework_id = $routeParams.framework_id;
-            $scope.executor_id = $routeParams.executor_id;
+        '$scope', '$stateParams', '$http', '$q', '$timeout', 'top',
+        function($scope, $stateParams, $http, $q, $timeout, $top) {
+            $scope.slave_id = $stateParams.slave_id;
+            $scope.framework_id = $stateParams.framework_id;
+            $scope.executor_id = $stateParams.executor_id;
 
             var update = function() {
-                if (!($routeParams.slave_id in $scope.slaves)) {
-                    $scope.alert_message = 'No slave found with ID: ' + $routeParams.slave_id;
+                if (!($stateParams.slave_id in $scope.slaves)) {
+                    $scope.alert_message = 'No slave found with ID: ' + $stateParams.slave_id;
                     $('#alert').show();
                     return;
                 }
 
-                var pid = $scope.slaves[$routeParams.slave_id].pid;
-                var hostname = $scope.slaves[$routeParams.slave_id].hostname;
+                var pid = $scope.slaves[$stateParams.slave_id].pid;
+                var hostname = $scope.slaves[$stateParams.slave_id].hostname;
                 var id = pid.substring(0, pid.indexOf('@'));
                 var host = hostname + ":" + pid.substring(pid.lastIndexOf(':') + 1);
 
@@ -592,7 +588,7 @@
                             _.find($scope.state.completed_frameworks, matchFramework);
 
                         if (!$scope.framework) {
-                            $scope.alert_message = 'No framework found with ID: ' + $routeParams.framework_id;
+                            $scope.alert_message = 'No framework found with ID: ' + $stateParams.framework_id;
                             $('#alert').show();
                             return;
                         }
@@ -607,7 +603,7 @@
                             _.find($scope.framework.completed_executors, matchExecutor);
 
                         if (!$scope.executor) {
-                            $scope.alert_message = 'No executor found with ID: ' + $routeParams.executor_id;
+                            $scope.alert_message = 'No executor found with ID: ' + $stateParams.executor_id;
                             $('#alert').show();
                             return;
                         }
@@ -638,7 +634,7 @@
     // TODO(ssorallen): Add `executor.directory` to the state.json output so this
     // controller of rerouting is no longer necessary.
     mesosApp.controller('SlaveExecutorRerouterCtrl',
-        function($alert, $http, $location, $routeParams, $scope, $window) {
+        function($alert, $http, $location, $stateParams, $scope, $window) {
 
             function goBack(flashMessageOrOptions) {
                 if (flashMessageOrOptions) {
@@ -651,7 +647,7 @@
                 } else {
                     // Otherwise navigate to the framework page, which is likely the
                     // previous page anyway.
-                    $location.path('/frameworks/' + $routeParams.framework_id).replace();
+                    $location.path('/mesos/frameworks/' + $stateParams.framework_id).replace();
                 }
             }
 
@@ -666,26 +662,26 @@
                 return $location.path('/').replace();
             }
 
-            var slave = $scope.slaves[$routeParams.slave_id];
+            var slave = $scope.slaves[$stateParams.slave_id];
 
             // If the slave doesn't exist, send the user back.
             if (!slave) {
-                return goBack("Slave with ID '" + $routeParams.slave_id + "' does not exist.");
+                return goBack("Slave with ID '" + $stateParams.slave_id + "' does not exist.");
             }
 
             var pid = slave.pid;
-            var hostname = $scope.slaves[$routeParams.slave_id].hostname;
+            var hostname = $scope.slaves[$stateParams.slave_id].hostname;
             var id = pid.substring(0, pid.indexOf('@'));
             var port = pid.substring(pid.lastIndexOf(':') + 1);
             var host = hostname + ":" + port;
 
             // Request slave details to get access to the route executor's "directory"
             // to navigate directly to the executor's sandbox.
-            $http.jsonp('//' + host + '/mesos/' + id + '/state.json?jsonp=JSON_CALLBACK')
+            $http.jsonp('//' + host + '/' + id + '/state.json?jsonp=JSON_CALLBACK')
                 .success(function(response) {
 
                     function matchFramework(framework) {
-                        return $routeParams.framework_id === framework.id;
+                        return $stateParams.framework_id === framework.id;
                     }
 
                     var framework =
@@ -694,14 +690,14 @@
 
                     if (!framework) {
                         return goBack(
-                            "Framework with ID '" + $routeParams.framework_id +
-                            "' does not exist on slave with ID '" + $routeParams.slave_id +
+                            "Framework with ID '" + $stateParams.framework_id +
+                            "' does not exist on slave with ID '" + $stateParams.slave_id +
                             "'."
                         );
                     }
 
                     function matchExecutor(executor) {
-                        return $routeParams.executor_id === executor.id;
+                        return $stateParams.executor_id === executor.id;
                     }
 
                     var executor =
@@ -710,15 +706,15 @@
 
                     if (!executor) {
                         return goBack(
-                            "Executor with ID '" + $routeParams.executor_id +
-                            "' does not exist on slave with ID '" + $routeParams.slave_id +
+                            "Executor with ID '" + $stateParams.executor_id +
+                            "' does not exist on slave with ID '" + $stateParams.slave_id +
                             "'."
                         );
                     }
 
                     // Navigate to a path like '/slaves/:id/browse?path=%2Ftmp%2F', the
                     // recognized "browse" endpoint for a slave.
-                    $location.path('/slaves/' + $routeParams.slave_id + '/browse')
+                    $location.path('/dashboard/mesos/slaves/' + $stateParams.slave_id + '/browse')
                         .search({path: executor.directory})
                         .replace();
                 })
@@ -730,7 +726,7 @@
                             "The slave timed out or went offline"
                         ],
                         message: "Potential reasons:",
-                        title: "Failed to connect to slave '" + $routeParams.slave_id +
+                        title: "Failed to connect to slave '" + $stateParams.slave_id +
                         "' on '" + host + "'."
                     });
 
@@ -741,14 +737,14 @@
         });
 
 
-    mesosApp.controller('BrowseCtrl', function($scope, $routeParams, $http) {
+    mesosApp.controller('BrowseCtrl', function($scope, $stateParams, $http, $location) {
         var update = function() {
-            if ($routeParams.slave_id in $scope.slaves && $routeParams.path) {
-                $scope.slave_id = $routeParams.slave_id;
-                $scope.path = $routeParams.path;
+            if ($stateParams.slave_id in $scope.slaves && $location.path) {
+                $scope.slave_id = $stateParams.slave_id;
+                $scope.path = $location.path;
 
-                var pid = $scope.slaves[$routeParams.slave_id].pid;
-                var hostname = $scope.slaves[$routeParams.slave_id].hostname;
+                var pid = $scope.slaves[$stateParams.slave_id].pid;
+                var hostname = $scope.slaves[$stateParams.slave_id].hostname;
                 var id = pid.substring(0, pid.indexOf('@'));
                 var host = hostname + ":" + pid.substring(pid.lastIndexOf(':') + 1);
                 var url = '//' + host + '/mesos/files/browse.json?jsonp=JSON_CALLBACK';
@@ -761,18 +757,18 @@
 
                 // TODO(bmahler): Try to get the error code / body in the error callback.
                 // This wasn't working with the current version of angular.
-                $http.jsonp(url, {params: {path: $routeParams.path}})
+                $http.jsonp(url, {params: {path: $stateParams.path}})
                     .success(function(data) {
                         $scope.listing = data;
                         $('#listing').show();
                     })
                     .error(function() {
-                        $scope.alert_message = 'Error browsing path: ' + $routeParams.path;
+                        $scope.alert_message = 'Error browsing path: ' + $stateParams.path;
                         $('#alert').show();
                     });
             } else {
-                if (!($routeParams.slave_id in $scope.slaves)) {
-                    $scope.alert_message = 'No slave found with ID: ' + $routeParams.slave_id;
+                if (!($stateParams.slave_id in $scope.slaves)) {
+                    $scope.alert_message = 'No slave found with ID: ' + $stateParams.slave_id;
                 } else {
                     $scope.alert_message = 'Missing "path" request parameter.';
                 }

@@ -164,7 +164,7 @@
                         </span>
                             </td>
                             <td>
-                                <a data-ng-show="slaves[task.slave_id]" href="#/slaves/{{task.slave_id}}/frameworks/{{task.framework_id}}/executors/{{task.executor_id}}/browse">
+                                <a data-ng-show="slaves[task.slave_id]" href="#/dashboard/mesos/slaves/{{task.slave_id}}/frameworks/{{task.framework_id}}/executors/{{task.executor_id}}/browse">
                                     Sandbox
                                 </a>
                         <span class="text-muted" data-ng-show="!slaves[task.slave_id]">
@@ -204,7 +204,7 @@
                             </td>
                             <td>
                                 <a data-ng-show="_.has(slaves, task.slave_id)"
-                                   href="#/slaves/{{task.slave_id}}/frameworks/{{task.framework_id}}/executors/{{task.executor_id}}">
+                                   href="#/dashboard/mesos/slaves/{{task.slave_id}}/frameworks/{{task.framework_id}}/executors/{{task.executor_id}}">
                                     {{slaves[task.slave_id].hostname}}
                                 </a>
                         <span class="text-muted" data-ng-show="!_.has(slaves, task.slave_id)">
@@ -212,7 +212,7 @@
                         </span>
                             </td>
                             <td>
-                                <a data-ng-show="slaves[task.slave_id]" href="#/slaves/{{task.slave_id}}/frameworks/{{task.framework_id}}/executors/{{task.executor_id}}/browse">
+                                <a data-ng-show="slaves[task.slave_id]" href="#/dashboard/mesos/slaves/{{task.slave_id}}/frameworks/{{task.framework_id}}/executors/{{task.executor_id}}/browse">
                                     Sandbox
                                 </a>
                                 <span class="text-muted" data-ng-show="!slaves[task.slave_id]">
