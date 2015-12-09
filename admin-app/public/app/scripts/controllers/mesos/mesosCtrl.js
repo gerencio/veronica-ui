@@ -739,31 +739,36 @@
 
     mesosApp.controller('BrowseCtrl', function($scope, $stateParams, $http, $location) {
         var update = function() {
-            if ($stateParams.slave_id in $scope.slaves && $location.path) {
+
+
+            var path_head = $location.$$search.path;
+
+            if ($stateParams.slave_id in $scope.slaves && path_head) {
                 $scope.slave_id = $stateParams.slave_id;
-                $scope.path = $location.path;
+                $scope.path = path_head;
 
                 var pid = $scope.slaves[$stateParams.slave_id].pid;
                 var hostname = $scope.slaves[$stateParams.slave_id].hostname;
                 var id = pid.substring(0, pid.indexOf('@'));
                 var host = hostname + ":" + pid.substring(pid.lastIndexOf(':') + 1);
-                var url = '//' + host + '/mesos/files/browse.json?jsonp=JSON_CALLBACK';
+                var url = '//' + host + '/files/browse.json?jsonp=JSON_CALLBACK';
 
                 $scope.slave_host = host;
 
                 $scope.pail = function($event, path) {
+                    console.log(path);
                     pailer(host, path, decodeURIComponent(path));
                 };
 
                 // TODO(bmahler): Try to get the error code / body in the error callback.
                 // This wasn't working with the current version of angular.
-                $http.jsonp(url, {params: {path: $stateParams.path}})
+                $http.jsonp(url, {params: {path: path_head}})
                     .success(function(data) {
                         $scope.listing = data;
                         $('#listing').show();
                     })
                     .error(function() {
-                        $scope.alert_message = 'Error browsing path: ' + $stateParams.path;
+                        $scope.alert_message = 'Error browsing path: ' + path_head;
                         $('#alert').show();
                     });
             } else {
