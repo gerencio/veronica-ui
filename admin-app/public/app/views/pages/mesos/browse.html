@@ -4,7 +4,7 @@
         <a class="badge badge-type" href="#">Master</a>
     </li>
     <li>
-        <a class="badge badge-type" href="#/slaves/{{slave_id}}" title="{{slave_id}}">
+        <a class="badge badge-type" href="#/dashboard/mesos/slaves/{{slave_id}}" title="{{slave_id}}">
             Slave</a>
     </li>
     <li class="active">
@@ -14,7 +14,7 @@
 
 <ol class="breadcrumb">
     <li ng-repeat="dir in path.split('/')">
-        <a href="#/slaves/{{slave_id}}/browse?path={{
+        <a href="#/dashboard/mesos/slaves/{{slave_id}}/browse?path={{
              encodeURIComponent(path.split('/').slice(0, $index + 1).join('/'))}}">
             {{dir}}
         </a>
@@ -54,18 +54,18 @@
                     <td class="text-right">{{file.size | dataSize}}</td>
                     <td class="text-right">{{file.mtime * 1000 | unixDate}}</td>
                     <td>
-              <span data-ng-show="file.mode[0] == 'd'">
-                <i class="glyphicon glyphicon-folder-close"></i>
-                <a href="#/slaves/{{slave_id}}/browse?path={{encodeURIComponent(file.path)}}">
-                    {{basename(file.path)}}
-                </a>
-              </span>
-              <span data-ng-show="file.mode[0] != 'd'">
-                <i class="glyphicon glyphicon-file" style="visibility: hidden;"></i>
-                <a href="" ng-click="pail($event, encodeURIComponent(file.path))">
-                    {{basename(file.path)}}
-                </a>
-              </span>
+                      <span data-ng-show="file.mode[0] == 'd'">
+                        <i class="glyphicon glyphicon-folder-close"></i>
+                        <a href="#/dashboard/mesos/slaves/{{slave_id}}/browse?path={{encodeURIComponent(file.path)}}">
+                            {{basename(file.path)}}
+                        </a>
+                      </span>
+                      <span data-ng-show="file.mode[0] != 'd'">
+                        <i class="glyphicon glyphicon-file" style="visibility: hidden;"></i>
+                        <a href="" ng-click="pail($event, encodeURIComponent(file.path))">
+                            {{basename(file.path)}}
+                        </a>
+                      </span>
                     </td>
                     <td>
                         <a data-ng-show="file.mode[0] != 'd'"
@@ -80,4 +80,13 @@
             </table>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-6" ng-repeat="file in listing | orderBy:['-mode', 'path']">
+
+            <pailer path="//{{slave_host}}/files/read.json?path={{file.path}}" ></pailer>
+
+        </div>
+    </div>
 </div>
+
