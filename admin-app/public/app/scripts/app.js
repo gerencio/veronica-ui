@@ -231,6 +231,25 @@
                 }
             };
         })
+
+
+        .directive('pailer', [
+            function () {
+
+                return {
+                    restrict: 'E',
+                    templateUrl: 'views/pages/mesos/pailer.html',
+                    scope: {
+                        path: '@',
+                        indice: '@'
+                    }
+                };
+
+            }
+        ])
+
+
+
         .directive('mTimestamp', [ '$rootScope', function($rootScope) {
             return {
                 restrict: 'E',

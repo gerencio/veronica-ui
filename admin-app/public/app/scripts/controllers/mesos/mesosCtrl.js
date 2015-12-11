@@ -14,14 +14,15 @@
     // Invokes the pailer for the specified host and path using the
     // specified window_title.
     function pailer(host, path, window_title) {
-        var url = '//' + host + '/mesos/files/read.json?path=' + path;
+        var url = '//' + host + '/files/read.json?path=' + path;
         var pailer =
-            window.open('/static/pailer.html', url, 'width=580px, height=700px');
+            window.open('/views/pages/mesos/pailer.html', url, 'width=580px, height=700px');
 
         // Need to use window.onload instead of document.ready to make
         // sure the title doesn't get overwritten.
         pailer.onload = function() {
-            pailer.document.title = window_title + ' (' + host + ')';
+           // pailer.document.title = window_title + ' (' + host + ')';
+            //console.log(window_title);
         };
     }
 
@@ -412,7 +413,7 @@
                             [{label: 'Continue'}]
                         ).open();
                     } else {
-                        pailer(host, '/mesos/slave/log', 'Mesos Slave');
+                        pailer(host, '/slave/log', 'Mesos Slave');
                     }
                 };
 
@@ -421,7 +422,7 @@
                     $top.start(host, $scope);
                 }
 
-                $http.jsonp('//' + host + '/mesos/' + id + '/state.json?jsonp=JSON_CALLBACK')
+                $http.jsonp('//' + host + '/' + id + '/state.json?jsonp=JSON_CALLBACK')
                     .success(function (response) {
                         $scope.state = response;
 
@@ -499,7 +500,7 @@
                     $top.start(host, $scope);
                 }
 
-                $http.jsonp('//' + host + '/mesos/' + id + '/state.json?jsonp=JSON_CALLBACK')
+                $http.jsonp('//' + host + '/' + id + '/state.json?jsonp=JSON_CALLBACK')
                     .success(function (response) {
                         $scope.state = response;
 
@@ -572,7 +573,7 @@
                     $top.start(host, $scope);
                 }
 
-                $http.jsonp('//' + host + '/mesos/' + id + '/state.json?jsonp=JSON_CALLBACK')
+                $http.jsonp('//' + host + '/' + id + '/state.json?jsonp=JSON_CALLBACK')
                     .success(function (response) {
                         $scope.state = response;
 
@@ -756,8 +757,7 @@
                 $scope.slave_host = host;
 
                 $scope.pail = function($event, path) {
-                    console.log(path);
-                    pailer(host, path, decodeURIComponent(path));
+                        pailer(host, path, decodeURIComponent(path));
                 };
 
                 // TODO(bmahler): Try to get the error code / body in the error callback.
