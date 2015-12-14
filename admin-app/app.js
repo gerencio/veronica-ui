@@ -72,6 +72,9 @@ require('./routes/homeRoutes')(app, passport);
 require('./routes/proxyRoutes')(app, passport, proxies.mesos.http_host, proxies.mesos.http_port, "/", proxies.mesos.prefix, http, express, proxies.mesos.prefix);
 //chronos route
 require('./routes/proxyRoutes')(app, passport, proxies.chronos.http_host, proxies.chronos.http_port, "/", proxies.chronos.prefix, http, express, proxies.chronos.prefix);
+//marathon route
+require('./routes/proxyRoutes')(app, passport, proxies.marathon.http_host, proxies.marathon.http_port, "/", proxies.marathon.prefix, http, express, proxies.marathon.prefix);
+
 require('./routes/userRoutes')(app, passport);
 
 /// catch 404 and forward to error handler

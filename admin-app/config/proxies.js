@@ -10,6 +10,11 @@ module.exports = {
         prefix : "/chronos/",
         http_host : process.env.HTTP_CHRONOS,
         http_port : process.env.PORT_CHRONOS
+    },
+    marathon : {
+        prefix : "/marathon/",
+        http_host : process.env.HTTP_MARATHON,
+        http_port : process.env.PORT_MARATHON
     }
 
 };
