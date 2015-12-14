@@ -71,7 +71,12 @@
                     controller: 'HomeCtrl',
                     controllerAs: 'home'
                 })
-
+                .state('jobs', {
+                    url: '/jobs',
+                    parent: 'dashboard',
+                    templateUrl: 'views/pages/jobs/jobs.html?v='+window.app_version,
+                    controller: 'JobsCtrl'
+                })
 
                 .state('mesos', {
                     url: '/mesos',
@@ -240,8 +245,7 @@
                     restrict: 'E',
                     templateUrl: 'views/pages/mesos/pailer.html',
                     scope: {
-                        path: '@',
-                        indice: '@'
+                        path: '@'
                     }
                 };
 
@@ -273,6 +277,9 @@
                 templateUrl: 'scripts/directives/mesos/timestamp.html'
             }
         }])
+
+
+
         .directive('mTable', ['$compile', '$filter', function($compile, $filter) {
             /* This directive does not have a template. The DOM doesn't like
              * having partially defined tables and so they don't work well with
