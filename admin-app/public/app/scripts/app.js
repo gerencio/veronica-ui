@@ -9,7 +9,8 @@
     *
     * Main module of the application.
     */
-    window.app_version = 2;
+    window.app_version = 2;        'base64'
+
 
     angular
     .module('dashyAngular', [

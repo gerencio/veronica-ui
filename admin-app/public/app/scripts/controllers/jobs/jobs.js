@@ -7,45 +7,28 @@
         '$scope', '$http', '$location',
         function($scope, $http, $location) {
 
-            // lista de jobs (marathon
+            $scope.jobs = {};
+
+            // lista de jobs (chronos)
             $scope.jobs_view = function () {
-                $http.get('/marathon/v2/apps')
-                    .then(function successCallback(data) {
-                        console.log(data);
-                    }, function errorCallback(err) {
-                        console.log(err);
-                });
-            };
 
-            // Job especifico (marathon)
-            $scope.jobs_views = function (app_id) {
-                $http.get('/marathon/v2/apps/' + app_id)
-                    .then(function successCallback(data) {
+                $http.defaults.headers.common = {"Access-Control-Request-Headers": "accept, origin, authorization"};
+                $http.defaults.headers.common['Authorization'] = 'Basic ' + btoa('master' + ':' + '1234');
+                $http({method: 'GET', url: '/chronos/scheduler/jobs'}).
+                    success(function(data) {
                         console.log(data);
-                    }, function errorCallback(err) {
-                        console.log(err);
-                });
-            };
+                        $scope.jobs = data;
 
-            // Restart Job (marathon)
-            $scope.jobs_restart = function (app_id) {
-                $http.get('/marathon/v2/apps/' + app_id + '/restart')
-                    .then(function successCallback(data) {
-                        console.log(data);
-                    }, function errorCallback(err) {
+
+
+                    }).
+                    error(function(err) {
                         console.log(err);
                     });
+
             };
 
-            // Tasks (marathon)
-            $scope.jobs_tasks = function (app_id) {
-                $http.get('/marathon/v2/apps/' + app_id + '/tasks')
-                    .then(function successCallback(data) {
-                        console.log(data);
-                    }, function errorCallback(err) {
-                        console.log(err);
-                    });
-            };
+
 
         }]);
 
