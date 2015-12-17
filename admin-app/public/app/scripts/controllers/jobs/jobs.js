@@ -95,7 +95,6 @@
 
             // Salvar job no BD
             $scope.jobs_save = function () {
-                console.log($scope.job_id);
                 $http.post('/jobs', { job: $scope.job_id })
                     .then(
                         function(data){
