@@ -9,7 +9,7 @@ module.exports = function() {
 
         var _id = req.body.job._id;
         if(_id) {
-            Database.findByIdAndUpdate(_id, req.body).exec()
+            Database.findByIdAndUpdate(_id, req.body.job).exec()
                 .then(
                 function(data) {
                     res.json(data);
@@ -20,7 +20,7 @@ module.exports = function() {
                 }
             );
         } else {
-            Database.create(req.body)
+            Database.create(req.body.job)
                 .then(
                 function(data) {
                     res.status(201).json(data);
