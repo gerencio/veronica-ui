@@ -17,6 +17,7 @@
                     type: 'text',
                         label: 'name'
                     }
+                    //initialValue: ''
                 },
                 {
                     key: 'description',
@@ -57,7 +58,79 @@
                     type: 'text',
                         label: 'schedule'
                     }
-                }
+                },
+                {
+                    key: 'executor',
+                    type: 'input',
+                    templateOptions: {
+                    type: 'text',
+                        label: 'executor'
+                    }
+                },
+                {
+                    key: 'epsilon',
+                    type: 'input',
+                    templateOptions: {
+                    type: 'text',
+                        label: 'epsilon'
+                    }
+                },
+                {
+                    key: 'async',
+                    type: 'input',
+                    templateOptions: {
+                    type: 'text',
+                        label: 'async'
+                    }
+                },
+                {
+                    key: 'disabled',
+                    type: 'input',
+                    templateOptions: {
+                    type: 'text',
+                        label: 'disabled'
+                    }
+                },
+                {
+                    key: 'softError',
+                    type: 'input',
+                    templateOptions: {
+                    type: 'text',
+                        label: 'softError'
+                    }
+                },
+                {
+                    key: 'cpus',
+                    type: 'input',
+                    templateOptions: {
+                    type: 'text',
+                        label: 'cpus'
+                    }
+                },
+                {
+                    key: 'mem',
+                    type: 'input',
+                    templateOptions: {
+                    type: 'text',
+                        label: 'mem'
+                    }
+                },
+                {
+                    key: 'disk',
+                    type: 'input',
+                    templateOptions: {
+                    type: 'text',
+                        label: 'disk'
+                    }
+                },
+                {
+                    key: 'softError',
+                    type: 'input',
+                    templateOptions: {
+                    type: 'text',
+                        label: 'softError'
+                    }
+                },
             ];
 
             // lista de jobs (chronos)
@@ -67,7 +140,6 @@
                 $http.defaults.headers.common['Authorization'] = 'Basic ' + btoa('master' + ':' + '1234');
                 $http({method: 'GET', url: '/chronos/scheduler/jobs'}).
                     success(function(data) {
-                        console.log(data);
                         $scope.jobs = data;
                     }).
                     error(function(err) {
@@ -75,7 +147,6 @@
                     });
 
             };
-
 
 
 
@@ -98,14 +169,25 @@
                 $http.post('/jobs', { job: $scope.job_id })
                     .then(
                         function(data){
-                            console.log(data);
+                            $("#createJob").modal('hide');
                         }, function(err){
                             console.log(err)
                         }
                     );
             };
 
+            // Roda job
+            $scope.jobs_run = function () {
+                $("#runJob").modal('hide');
+                $http.put('/chronos/scheduler/job/' + $scope.job_id.name)
+                    .then(
+                    function(data){
 
+                    }, function(err){
+                        console.log(err)
+                    }
+                );
+            };
         }]);
 
 })();

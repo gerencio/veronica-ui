@@ -61,11 +61,32 @@
 
                 <formly-form model="job_id" fields="jobFields"></formly-form>
 
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" ng-click="jobs_save()" ><i class="fa fa-floppy-o"></i> Salvar</button>
-                <button type="button" class="btn btn-primary"><i class="fa fa-play"></i> Rodar</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#runJob"><i class="fa fa-play"></i> Rodar</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- create job -->
+<div id="runJob" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Force run</h4>
+            </div>
+            <div class="modal-body">
+
+                Você tem certeza que deseja rodar esse job?
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="jobs_run()" ><i class="fa fa-play"></i> Rodar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close"> Cancelar</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
