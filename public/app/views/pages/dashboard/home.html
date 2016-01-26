@@ -1,0 +1,24 @@
+<pageheader pagename="Reactive Monitor" subtitle="xDevel Sistemas"></pageheader>
+<div class="conter-wrapper">
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">Teste de Angular-Formly</h3>
+				</div>
+				<div class="panel-body">
+					<formly-form model="home.user" fields="home.userFields">
+						<button type="submit" class="btn btn-default" ng-click="home.submit(home.user)">Submit</button>
+					</formly-form>
+					<hr/>
+					<button ng-click="home.addInput()">Adicionar input</button>
+					<hr/>
+					<h4>Model:</h4>
+					<pre>{{home.user | json}}</pre>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

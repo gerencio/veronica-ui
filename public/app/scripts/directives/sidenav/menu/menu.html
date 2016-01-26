@@ -1,0 +1,30 @@
+<div>
+    
+    <div class="tab-pane active" id="menu">
+        <div class="photo-container text-center">
+            <a ui-sref="profile">
+                <img ng-show="picture" ng-src="{{picture}}" alt="" class="img-circle dash-profile" />
+                <img ng-hidde="picture" src="./images/flat-avatar.png" alt="" class="img-circle dash-profile" />
+            </a>
+            <div class="t-p">
+                <a href="">{{profile.name}}</a>
+            </div>
+        </div>
+        <div class="section-heading">Menus</div>
+        <ul class="nav sidebar-nav">
+            <li ng-class="{active: $state.includes('home')}"><a ui-sref="home" ng-click="showSubNav(0)"><i class="fa fa-home"></i> <span class="menu-text"</span>Home</a></li>
+
+            <li ng-class="{active: $state.includes('jobs')}"><a href="#/dashboard/jobs" ng-click="showSubNav(0)"><i class="fa fa-clock-o"></i> <span class="menu-text">Jobs</span></a></li>
+
+            <li class="sidenav-dropdown" ng-class="{'show-subnav': showingSubNav=='mesos'}" ng-mouseover="hoverCancel()">
+                <a class="subnav-toggle" href="javascript:;" ng-click="showSubNav('mesos')"><i class="fa fa-area-chart"></i> <span class="menu-text"> Mesos <i class="fa fa-angle-down fa-angle-down  pull</span>-right"></i></a>
+                <ul class="nav sidenav-sub-menu" collapse="showingSubNav!='mesos'">
+                    <li ng-class="{active: $state.includes('homeMesos')}"><a ui-sref="homeMesos"><i class="fa fa-bar-chart"></i> <span class="menu-text">Home</span></a></li>
+                    <li ng-class="{active: $state.includes('frameworks')}"><a ui-sref="frameworks"><i class="fa fa-bar-chart"></i> <span class="menu-text">Frameworks</span></a></li>
+                    <li ng-class="{active: $state.includes('slaves')}"><a ui-sref="slaves"><i class="fa fa-bar-chart"></i> <span class="menu-text">Slaves</span></a></li>
+                    <li ng-class="{active: $state.includes('offers')}"><a ui-sref="offers"><i class="fa fa-bar-chart"></i> <span class="menu-text">Offers</span></a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

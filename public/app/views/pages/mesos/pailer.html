@@ -1,0 +1,49 @@
+<div id="body">
+
+  <input id="path_browse" type="text" value="{{path}}" />
+
+
+  <pre id="data"></pre>
+  <div class="indicator" id="indicator"></div>
+
+  <script>
+    var $body = $('#body');
+    var $data = $('#data');
+
+    function resize() {
+      //var margin_left = parseInt($body.css('margin-left'));
+      //var margin_top = parseInt($body.css('margin-top'));
+      //var margin_bottom = parseInt($body.css('margin-bottom'));
+      //$data
+      //        .width($(window).width() - margin_left)
+      //        .height($(window).height() - margin_top - margin_bottom);
+    }
+
+    //$(window).resize(resize);
+
+    $(document).ready(function() {
+      //resize();
+
+      $data.pailer({
+        read: function(options) {
+          var settings = $.extend({
+            'offset': -1,
+            'length': -1
+          }, options);
+
+          var path = $('#path_browse').val();
+
+          var url = path
+                  + '&offset=' + settings.offset
+                  + '&length=' + settings.length
+                  + '&jsonp=?';
+          return $.getJSON(url);
+        },
+        'indicator': $('#indicator')
+      });
+
+
+    });
+  </script>
+</div>
+
