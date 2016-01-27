@@ -9,29 +9,29 @@ var bower = require('main-bower-files')();
 
 gulp.task('styles', function() {
   return gulp.src([
-      'public/app/styles/less/app-green.less',
-      'public/app/styles/less/app-blue.less',
-      'public/app/styles/less/app-red.less',
-      'public/app/styles/less/app-orange.less'
+      'client/app/styles/less/app-green.less',
+      'client/app/styles/less/app-blue.less',
+      'client/app/styles/less/app-red.less',
+      'client/app/styles/less/app-orange.less'
     ])
     .pipe($.plumber())
     .pipe($.less())
     .pipe($.autoprefixer({browsers: ['last 1 version']}))
-    .pipe(gulp.dest('public/dist/styles'))
-    .pipe(gulp.dest('public/app/styles'))
-    .pipe(gulp.dest('public/.tmp/styles'));
+    .pipe(gulp.dest('client/dist/styles'))
+    .pipe(gulp.dest('client/app/styles'))
+    .pipe(gulp.dest('client/.tmp/styles'));
 });
 
 
 gulp.task('jshint', function() {
-  return gulp.src('public/app/scripts/**/*.js')
+  return gulp.src('client/app/scripts/**/*.js')
     .pipe($.jshint())
     .pipe($.jshint.reporter('jshint-stylish'))
     .pipe($.jshint.reporter('fail'));
 });
 
 gulp.task('jscs', function() {
-  return gulp.src('public/app/scripts/**/*.js')
+  return gulp.src('client/app/scripts/**/*.js')
     .pipe($.jscs());
 });
 
@@ -39,11 +39,11 @@ gulp.task('html', ['styles'], function() {
   var lazypipe = require('lazypipe');
   var cssChannel = lazypipe()
     .pipe($.csso)
-    .pipe($.replace, 'public/lib/bootstrap/fonts', 'fonts');
+    .pipe($.replace, 'client/lib/bootstrap/fonts', 'fonts');
 
   var assets = $.useref.assets({searchPath: '{.tmp,app}'});
 
-  return gulp.src(['public/app/**/*.html'])
+  return gulp.src(['client/app/**/*.html'])
     .pipe(assets)
     .pipe($.if('*.js', $.ngAnnotate()))
     .pipe($.if('*.js', $.uglify()))
@@ -51,51 +51,34 @@ gulp.task('html', ['styles'], function() {
     .pipe(assets.restore())
     .pipe($.useref())
     .pipe($.if('*.html', $.minifyHtml({conditionals: true, loose: true})))
-    .pipe(gulp.dest('public/dist'));
+    .pipe(gulp.dest('client/dist'));
 });
 
-gulp.task('ejs', ['styles'], function() {
-  var lazypipe = require('lazypipe');
-  var cssChannel = lazypipe()
-      .pipe($.csso)
-      .pipe($.replace, 'public/lib/bootstrap/fonts', 'fonts');
 
-  var assets = $.useref.assets({searchPath: '{.tmp,app}'});
-
-  return gulp.src(['views/*.ejs'])
-      .pipe(assets)
-      .pipe($.if('*.js', $.ngAnnotate()))
-      .pipe($.if('*.js', $.uglify()))
-      .pipe($.if('*.css', cssChannel()))
-      .pipe(assets.restore())
-      .pipe($.useref())
-      .pipe($.if('*.ejs', $.minifyHtml({conditionals: true, loose: true})))
-      .pipe(gulp.dest('dist/views'));
-});
 
 gulp.task('images', function() {
-  return gulp.src('public/app/images/**/*')
+  return gulp.src('client/app/images/**/*')
      .pipe($.cache($.imagemin({
        progressive: true,
        interlaced: true
      })))
-    .pipe(gulp.dest('public/dist/images'));
+    .pipe(gulp.dest('client/dist/images'));
 });
 
 gulp.task('fonts', function() {
-  return gulp.src(bower.concat('public/app/styles/fonts/**/*')
-    .concat('public/lib/bootstrap/fonts/*')
+  return gulp.src(bower.concat('client/app/styles/fonts/**/*')
+    .concat('client/lib/bootstrap/fonts/*')
   )
     .pipe($.filter('**/*.{eot,svg,ttf,woff,woff2}'))
     .pipe($.flatten())
-    .pipe(gulp.dest('public/dist/fonts'))
-    .pipe(gulp.dest('public/app/fonts'))
-    .pipe(gulp.dest('public/.tmp/fonts'))
+    .pipe(gulp.dest('client/dist/fonts'))
+    .pipe(gulp.dest('client/app/fonts'))
+    .pipe(gulp.dest('client/.tmp/fonts'))
 });
 
 gulp.task('extras', function() {
   return gulp.src([
-    'public/app/*.*',
+    'client/app/*.*',
     '!app/*.html',
     'node_modules/apache-server-configs/dist/.htaccess'
   ], {
@@ -103,7 +86,7 @@ gulp.task('extras', function() {
   }).pipe(gulp.dest('dist'));
 });
 
-gulp.task('clean', require('del').bind(null, ['.tmp', 'dist', 'public/dist']));
+gulp.task('clean', require('del').bind(null, ['.tmp', 'dist', 'client/dist']));
 gulp.task('test', function(done) {
   karma.start({
     configFile: __dirname + '/public/test/karma.conf.js',
@@ -122,24 +105,24 @@ gulp.task('wiredep', function() {
     'angular-scenario'
   ];
 
-  gulp.src('public/app/styles/*.less')
+  gulp.src('client/app/styles/*.less')
     .pipe(wiredep())
-    .pipe(gulp.dest('public/app/styles'));
+    .pipe(gulp.dest('client/app/styles'));
 
-  gulp.src('public/app/*.html')
+  gulp.src('client/app/*.html')
     .pipe(wiredep({exclude: exclude}))
     .pipe(gulp.dest('app'));
 
-  gulp.src('public/test/*.js')
+  gulp.src('client/test/*.js')
     .pipe(wiredep({exclude: exclude, devDependencies: true}))
-    .pipe(gulp.dest('public/test'));
+    .pipe(gulp.dest('client/test'));
 });
 
 
 
-gulp.task('builddist', ['jshint', 'html','ejs', 'images', 'fonts', 'extras', 'styles'],
+gulp.task('builddist', ['jshint', 'html', 'images', 'fonts', 'extras', 'styles'],
   function() {
-  return gulp.src('public/dist/**/*').pipe($.size({title: 'build', gzip: true}));
+  return gulp.src('client/dist/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 
 gulp.task('build', ['clean'], function() {

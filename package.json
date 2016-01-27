@@ -1,6 +1,6 @@
 {
-  "name": "admin-app",
-  "version": "1.0.0",
+  "name": "veronica-ui",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "test": "gulp test",
