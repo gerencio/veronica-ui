@@ -1,73 +1,35 @@
 var verificaAutenticacao = require('../services/verificaAutenticacao.js');
 
-module.exports = function (app, passport, backend_host, backend_port, backend_path_prefix, standard_prefix, http, express, path , auth) {
 
-    // Proxy request
+
+module.exports = function (app, passport, endpoint, user , pass , token , path){
     function get_from_proxy(request, response) {
+        "use strict";
+        var api = require('../services/apiCall.js')(endpoint,user,pass,token);
 
-        // if a path prefix is set, remove the existing one
-        if (backend_path_prefix !== '') {
-            if (request.url.indexOf(standard_prefix) === 0) {
-                request.url = backend_path_prefix + request.url.substr(standard_prefix.length);
-            }
+
+        let reqData = null;
+        let entity = request.path.replace(new RegExp(path, 'i'), '');
+        if (request.method === api.method.GET || request.method === api.method.DELETE){
+            reqData = null;
+        }else{
+            reqData = request.body;
         }
 
+        return api.apiCall(entity , request.method ,reqData );
 
-
-        var options = {
-            hostname: backend_host,
-            port: backend_port,
-            path: request.url,
-            method: request.method,
-            headers: request.headers
-        };
-
-        if  (auth){
-            var authUser = auth.split(':')[0];
-            var authPass = auth.split(':')[1];
-            options.auth = {
-                'user': authUser,
-                'pass': authPass,
-                'sendImmediately': false
-            }
-        }
-
-        console.log(options.method, options.path);
-
-        var proxy_request = http.request(options);
-
-        proxy_request.addListener('response', function (proxy_response) {
-            proxy_response.addListener('data', function (chunk) {
-                response.write(chunk, 'binary');
-            });
-
-            proxy_response.addListener('end', function () {
-                if (process.env.CHAOS_MONKEY) {
-                    setTimeout(function () {
-                        response.end();
-                    }, Math.floor(Math.random() * 3000));
-                } else {
-                    response.end();
-                }
-            });
-            //console.log(proxy_response.headers);
-            response.writeHead(proxy_response.statusCode, proxy_response.headers);
-        });
-
-        if (options.headers["content-length"] > 0 ){
-            proxy_request.write(JSON.stringify(request.body))
-        }
-
-
-        proxy_request.end();
     }
 
-
-    // Handle of path rests through proxy
     app.route(path + '*').all(verificaAutenticacao,function (req, res, next) {
-        req.headers.host = backend_host;
-        get_from_proxy(req, res);
+        get_from_proxy(req, res)
+            .then((resp)=> {
+                return res.json(resp.data);
+            })
+            .catch((err) => console.log(err));
+        // todo implementar o tratamento de erro novo
     });
 
     return app;
+
 };
+

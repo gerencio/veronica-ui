@@ -20,7 +20,7 @@ var SMschema = mongoose.Schema({
         type: String
     },
     retries: {
-        type: String
+        type: Number
     },
     owner: {
         type: String
@@ -35,25 +35,25 @@ var SMschema = mongoose.Schema({
         type: Boolean
     },
     successCount: {
-        type: String
+        type: Number
     },
     errorCount: {
-        type: String
+        type: Number
     },
     lastSuccess: {
-        type: String
+        type: Date
     },
     lastError: {
-        type: String
+        type: Date
     },
     cpus: {
-        type: String
+        type: Number
     },
     disk: {
-        type: String
+        type: Number
     },
     mem: {
-        type: String
+        type: Number
     },
     disabled: {
         type: Boolean

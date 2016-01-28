@@ -24,16 +24,10 @@ var configDB = require('./config/database.js'),
 
 mongoose.connect(configDB.url); // connect to our database
 
-// view engine setup
-if (app.get('env') === 'development') {
-    app.set('views', path.join(__dirname, 'public/app'));
-}else{
-    app.set('views', path.join(__dirname, 'dist/views'));
-}
 
 app.set('view engine', 'html');
 
-app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/../client/favicon.ico'));
 app.use(logger('dev'));
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
@@ -41,9 +35,9 @@ app.use(bodyParser.raw({limit: '50mb'})); // get information from html forms / l
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 if (app.get('env') === 'development') {
-    app.use(express.static(path.join(__dirname, 'public/app')));
+    app.use(express.static(path.join(__dirname, '/../client/app')));
 }else{
-    app.use(express.static(path.join(__dirname, 'public/dist')));
+    app.use(express.static(path.join(__dirname, '/../client/dist')));
 }
 
 
@@ -72,7 +66,8 @@ require('./routes/userRoutes')(app, passport);
 require('./routes/jobsRoutes')(app, passport);
 
 //mesos route
-require('./routes/proxyRoutes')(app, passport, proxies.mesos.http_host, proxies.mesos.http_port, "/", proxies.mesos.prefix, http, express, proxies.mesos.prefix);
+//require('./routes/proxyRoutes')(app, passport, proxies.mesos.http_host, proxies.mesos.http_port, "/", proxies.mesos.prefix, http, express, proxies.mesos.prefix);
+require('./routes/proxyRoutes')(app, passport, proxies.mesos.endpoint , null , null , null , proxies.mesos.prefix);
 //chronos route
 require('./routes/proxyRoutes')(app, passport, proxies.chronos.http_host, proxies.chronos.http_port, "/", proxies.chronos.prefix, http, express, proxies.chronos.prefix, proxies.chronos.http_auth);
 //marathon route

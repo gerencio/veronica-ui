@@ -5,7 +5,13 @@ module.exports = function() {
     const sanitize = require('mongo-sanitize');
 
 
-    let jobsController = {};
+    var jobsController = {};
+
+    jobsController.getJobs = function(req,res) {
+        "use strict";
+
+    };
+
 
     jobsController.postJob = function(req, res) {
 
