@@ -1,49 +1,66 @@
-<div id="body">
-
-  <input id="path_browse" type="text" value="{{path}}" />
-
-
-  <pre id="data"></pre>
-  <div class="indicator" id="indicator"></div>
-
-  <script>
-    var $body = $('#body');
-    var $data = $('#data');
-
-    function resize() {
-      //var margin_left = parseInt($body.css('margin-left'));
-      //var margin_top = parseInt($body.css('margin-top'));
-      //var margin_bottom = parseInt($body.css('margin-bottom'));
-      //$data
-      //        .width($(window).width() - margin_left)
-      //        .height($(window).height() - margin_top - margin_bottom);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style>
+    body {
+      line-height: 16px;
+      font-size: 14px;
     }
 
-    //$(window).resize(resize);
+    .indicator {
+      background: #000000;
+      color: #FFFFFF;
+      left: 5px;
+      position: absolute;
+      text-decoration: none;
+      top: 5px;
+    }
+  </style>
+</head>
 
-    $(document).ready(function() {
-      //resize();
+<body style="overflow: hidden;">
+<pre id="data"></pre>
+<div class="indicator" id="indicator"></div>
 
-      $data.pailer({
-        read: function(options) {
-          var settings = $.extend({
-            'offset': -1,
-            'length': -1
-          }, options);
+<script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script src="lib/underscore/underscore.js"></script>
+<script src="/scripts/jquery.pailer.js"></script>
 
-          var path = $('#path_browse').val();
+<script>
+  var $body = $('body');
+  var $data = $('#data');
 
-          var url = path
-                  + '&offset=' + settings.offset
-                  + '&length=' + settings.length
-                  + '&jsonp=?';
-          return $.getJSON(url);
-        },
-        'indicator': $('#indicator')
-      });
+  function resize() {
+    var margin_left = parseInt($body.css('margin-left'));
+    var margin_top = parseInt($body.css('margin-top'));
+    var margin_bottom = parseInt($body.css('margin-bottom'));
+    $data
+            .width($(window).width() - margin_left)
+            .height($(window).height() - margin_top - margin_bottom);
+  }
 
+  $(window).resize(resize);
 
+  $(document).ready(function() {
+    resize();
+
+    $data.pailer({
+      read: function(options) {
+        var settings = $.extend({
+          'offset': -1,
+          'length': -1
+        }, options);
+        var url = window.name
+                + '&offset=' + settings.offset
+                + '&length=' + settings.length
+                + '&jsonp=?';
+        return $.getJSON(url);
+      },
+      'indicator': $('#indicator')
     });
-  </script>
-</div>
-
+  });
+</script>
+</body>
+</html>
