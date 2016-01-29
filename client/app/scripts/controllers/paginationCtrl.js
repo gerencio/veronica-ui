@@ -3,12 +3,12 @@
 
   /**
    * @ngdoc function
-   * @name dashyAngular.controller:MainCtrl
+   * @name veronicaApp.controller:MainCtrl
    * @description
    * # MainCtrl
-   * Controller of dashyAngular
+   * Controller of veronicaApp
    */
-  angular.module('dashyAngular').controller('PaginationDemoCtrl', function ($scope, $log) {
+  angular.module('veronicaApp').controller('PaginationDemoCtrl', function ($scope, $log) {
     $scope.totalItems = 64;
     $scope.currentPage = 4;
 

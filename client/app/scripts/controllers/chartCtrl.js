@@ -3,12 +3,12 @@
 
 	/**
 	 * @ngdoc function
-	 * @name dashyAngular.controller:MainCtrl
+	 * @name veronicaApp.controller:MainCtrl
 	 * @description
 	 * # MainCtrl
-	 * Controller of dashyAngular
+	 * Controller of veronicaApp
 	 */
-	angular.module('dashyAngular').controller('ChartCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
+	angular.module('veronicaApp').controller('ChartCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
 		$scope.line = {
 			labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
 				  data: [

@@ -3,12 +3,12 @@
 
   /**
    * @ngdoc function
-   * @name dashyAngular.controller:MainCtrl
+   * @name veronicaApp.controller:MainCtrl
    * @description
    * # MainCtrl
-   * Controller of dashyAngular
+   * Controller of veronicaApp
    */
-  angular.module('dashyAngular').controller('CollapseDemoCtrl', function ($scope) {
+  angular.module('veronicaApp').controller('CollapseDemoCtrl', function ($scope) {
     $scope.isCollapsed = false;
   });
 

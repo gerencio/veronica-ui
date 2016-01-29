@@ -3,12 +3,12 @@
 
   /**
    * @ngdoc function
-   * @name dashyAngular.controller:MainCtrl
+   * @name veronicaApp.controller:MainCtrl
    * @description
    * # MainCtrl
-   * Controller of dashyAngular
+   * Controller of veronicaApp
    */
-  angular.module('dashyAngular').controller('ProgressDemoCtrl', function ($scope) {
+  angular.module('veronicaApp').controller('ProgressDemoCtrl', function ($scope) {
     $scope.max = 200;
 
     $scope.random = function() {

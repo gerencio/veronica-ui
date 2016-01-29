@@ -3,12 +3,12 @@
 
   /**
    * @ngdoc function
-   * @name dashyAngular.controller:MainCtrl
+   * @name veronicaApp.controller:MainCtrl
    * @description
    * # MainCtrl
-   * Controller of dashyAngular
+   * Controller of veronicaApp
    */
-  angular.module('dashyAngular').controller('TooltipDemoCtrl', function ($scope) {
+  angular.module('veronicaApp').controller('TooltipDemoCtrl', function ($scope) {
     $scope.dynamicTooltip = 'Hello, World!';
     $scope.dynamicTooltipText = 'dynamic';
     $scope.htmlTooltip = 'I\'ve been made <b>bold</b>!';

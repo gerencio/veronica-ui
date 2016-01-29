@@ -3,12 +3,12 @@
 
   /**
    * @ngdoc function
-   * @name dashyAngular.controller:MainCtrl
+   * @name veronicaApp.controller:MainCtrl
    * @description
    * # MainCtrl
-   * Controller of dashyAngular
+   * Controller of veronicaApp
    */
-  angular.module('dashyAngular')
+  angular.module('veronicaApp')
     .controller('DashboardCtrl', function($scope, $state) {
 
       $scope.$state = $state;

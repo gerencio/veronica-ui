@@ -24,14 +24,7 @@
                     <tr ng-repeat="framework in $data">
                         <td>
                             <a href="{{'#/dashboard/mesos/frameworks/' + framework.id}}">
-                                {{(framework.id | truncateMesosID) || framework.name}}</a>
-                            <button class="btn btn-xs btn-toggle btn-default"
-                                    clipboard
-                                    data-clipboard-text="{{framework.id}}"
-                                    tooltip="Copy ID"
-                                    tooltip-placement="right"
-                                    tooltip-trigger="clipboardhover">
-                            </button>
+                                {{(framework.id) || framework.name}}</a>
                         </td>
                         <td ng-switch="!!framework.webui_url">
                             <a ng-href="{{framework.webui_url}}" ng-switch-when="true">{{framework.hostname}}</a>

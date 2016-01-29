@@ -3,12 +3,12 @@
 
     /**
    * @ngdoc function
-   * @name dashyAngular.controller:MainCtrl
+   * @name veronicaApp.controller:MainCtrl
    * @description
    * # MainCtrl
-   * Controller of dashyAngular
+   * Controller of veronicaApp
    */
-  angular.module('dashyAngular').controller('DatepickerDemoCtrl', function ($scope) {
+  angular.module('veronicaApp').controller('DatepickerDemoCtrl', function ($scope) {
     $scope.today = function() {
       $scope.dt = new Date();
     };

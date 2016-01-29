@@ -8,7 +8,7 @@
 	 * # MainCtrl
 	 * Controller of AniTheme
 	 */
-	 angular.module('dashyAngular').controller('todoCtrl', function ($scope) {
+	 angular.module('veronicaApp').controller('todoCtrl', function ($scope) {
 		$scope.todos = [
 		{text:'Meeting with Nabindar Singh.', done:false, id: 'option1'},
 		{text:'Exercise at 6:pm with Nicholas.', done:false, id: 'option3'},

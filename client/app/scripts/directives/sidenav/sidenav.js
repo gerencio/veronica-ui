@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	angular.module('dashyAngular')
+	angular.module('veronicaApp')
 		.directive('sidenav',function(){
 			return {
 				templateUrl:'scripts/directives/sidenav/sidenav.html?v='+window.app_version,

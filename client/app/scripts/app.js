@@ -3,9 +3,9 @@
 
     /**
     * @ngdoc home
-    * @name dashyAngular
+    * @name veronicaApp
     * @description
-    * # dashyAngular
+    * # veronicaApp
     *
     * Main module of the application.
     */
@@ -15,11 +15,12 @@
 
 
     angular
-    .module('dashyAngular', [
+    .module('veronicaApp', [
         'ngRoute',
         'ui.router',
         'ngAnimate',
         'ui.bootstrap',
+        'ui.bootstrap.dialog',
         'textAngular',
         'ui.calendar',
         'perfect_scrollbar',

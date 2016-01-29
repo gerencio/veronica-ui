@@ -3,12 +3,12 @@
 
     /**
      * @ngdoc function
-     * @name dashyAngular.controller:HomeCtrl
+     * @name veronicaApp.controller:HomeCtrl
      * @description
      * # HomeCtrl
-     * Controller of dashyAngular
+     * Controller of veronicaApp
      */
-    angular.module('dashyAngular')
+    angular.module('veronicaApp')
         .controller('HomeCtrl', function($scope, $location) {
 
             var vm = this;

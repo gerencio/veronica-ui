@@ -3,11 +3,11 @@
 
 	/**
 	 * @ngdoc directive
-	 * @name DashdashyAngular.directive:pageHeader
+	 * @name DashveronicaApp.directive:pageHeader
 	 * @description
 	 * # pageHeader
 	 */
-	angular.module('dashyAngular')
+	angular.module('veronicaApp')
 		.directive('homeChart',function(){
 			return {
 				templateUrl:'scripts/directives/home-chart/home-chart.html?v='+window.app_version,

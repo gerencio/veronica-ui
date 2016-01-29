@@ -3,12 +3,12 @@
 
   /**
    * @ngdoc function
-   * @name dashyAngular.controller:MainCtrl
+   * @name veronicaApp.controller:MainCtrl
    * @description
    * # MainCtrl
-   * Controller of dashyAngular
+   * Controller of veronicaApp
    */
-  angular.module('dashyAngular').controller('ModalDemoCtrl', function ($scope, $modal, $log) {
+  angular.module('veronicaApp').controller('ModalDemoCtrl', function ($scope, $modal, $log) {
 
     $scope.items = ['item1', 'item2', 'item3'];
 
@@ -33,7 +33,7 @@
     };
   });
 
-  angular.module('dashyAngular').controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
+  angular.module('veronicaApp').controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
 
     $scope.items = items;
     $scope.selected = {

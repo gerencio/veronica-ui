@@ -3,12 +3,12 @@
 
   /**
    * @ngdoc function
-   * @name dashyAngular.controller:MainCtrl
+   * @name veronicaApp.controller:MainCtrl
    * @description
    * # MainCtrl
-   * Controller of dashyAngular
+   * Controller of veronicaApp
    */
-  angular.module('dashyAngular').controller('DropdownCtrl', function ($scope, $log) {
+  angular.module('veronicaApp').controller('DropdownCtrl', function ($scope, $log) {
     $scope.items = [
       'The first choice!',
       'And another choice for you.',

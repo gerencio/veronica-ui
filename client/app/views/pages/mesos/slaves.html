@@ -28,15 +28,8 @@
                 </thead>
                 <tr ng-repeat="slave in $data">
                     <td>
-                        <a href="#/slaves/{{slave.id}}">{{slave.id | truncateMesosID}}</a>
-                        <button class="btn btn-xs btn-default btn-toggle"
-                                clipboard
-                                data-clipboard-text="{{slave.id}}"
-                                tooltip="Copy ID"
-                                tooltip-placement="right"
-                                tooltip-trigger="clipboardhover">
-                            <i class="icon-file"></i>
-                        </button>
+                        <a href="{{'#/dashboard/mesos/slaves/' + slave.id}}">
+                            {{slave.id}}</a>
                     </td>
                     <td>{{slave.hostname}}</td>
                     <td>{{slave.resources.cpus | number}}</td>

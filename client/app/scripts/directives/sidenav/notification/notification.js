@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	angular.module('dashyAngular')
+	angular.module('veronicaApp')
 		.directive('notification',function(){
 			return {
 				templateUrl:'scripts/directives/sidenav/notification/notification.html',

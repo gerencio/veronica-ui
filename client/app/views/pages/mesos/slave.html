@@ -126,14 +126,7 @@
             <tr ng-repeat="framework in $data">
                 <td>
                     <a href="{{'#/slaves/' + slave_id + '/frameworks/' + framework.id}}">
-                        {{(framework.id | truncateMesosID) || framework.name}}</a>
-                    <button class="btn btn-xs btn-toggle btn-default"
-                            clipboard
-                            data-clipboard-text="{{framework.id}}"
-                            tooltip="Copy ID"
-                            tooltip-placement="right"
-                            tooltip-trigger="clipboardhover">
-                    </button>
+                        {{(framework.id) || framework.name}}</a>
                 </td>
                 <td>{{framework.user}}</td>
                 <td>{{framework.name}}</td>
@@ -160,14 +153,7 @@
             <tr ng-repeat="completed_framework in $data">
                 <td>
                     <a href="{{'#/slaves/' + slave_id + '/frameworks/' + completed_framework.id}}">
-                        {{completed_framework.id | truncateMesosID}}</a>
-                    <button class="btn btn-xs btn-toggle btn-default"
-                            clipboard
-                            data-clipboard-text="{{framework.id}}"
-                            tooltip="Copy ID"
-                            tooltip-placement="right"
-                            tooltip-trigger="clipboardhover">
-                    </button>
+                        {{completed_framework.id}}</a>
                 </td>
                 <td>{{completed_framework.user}}</td>
                 <td>{{completed_framework.name}}</td>

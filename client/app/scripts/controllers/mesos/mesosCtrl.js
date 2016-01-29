@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    var mesosApp = angular.module('dashyAngular');
+    var mesosApp = angular.module('veronicaApp');
 
     function hasSelectedText() {
         if (window.getSelection) {  // All browsers except IE before version 9.
@@ -390,7 +390,7 @@
 
     mesosApp.controller('SlaveCtrl', [
         '$dialog', '$scope', '$stateParams', '$http', '$q', '$timeout', 'top',
-        function($dialog, $scope, $stateParams, $http, $q, $timeout, $top) {
+        function($dialog, $scope, $stateParams, $http, $q, $timeout, $top ) {
             $scope.slave_id = $stateParams.slave_id;
 
             var update = function() {

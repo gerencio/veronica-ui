@@ -3,12 +3,12 @@
 
   /**
    * @ngdoc function
-   * @name dashyAngular.controller:MainCtrl
+   * @name veronicaApp.controller:MainCtrl
    * @description
    * # MainCtrl
-   * Controller of dashyAngular
+   * Controller of veronicaApp
    */
-  angular.module('dashyAngular').controller('ButtonsCtrl', function ($scope) {
+  angular.module('veronicaApp').controller('ButtonsCtrl', function ($scope) {
     $scope.singleModel = 1;
 
     $scope.radioModel = 'Middle';

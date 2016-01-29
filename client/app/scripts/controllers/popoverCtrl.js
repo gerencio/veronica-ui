@@ -3,12 +3,12 @@
 
   /**
    * @ngdoc function
-   * @name dashyAngular.controller:MainCtrl
+   * @name veronicaApp.controller:MainCtrl
    * @description
    * # MainCtrl
-   * Controller of dashyAngular
+   * Controller of veronicaApp
    */
-  angular.module('dashyAngular').controller('PopoverDemoCtrl', function ($scope) {
+  angular.module('veronicaApp').controller('PopoverDemoCtrl', function ($scope) {
     $scope.dynamicPopover = 'Hello, World!';
     $scope.dynamicPopoverTitle = 'Title';
   });

@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    var app = angular.module('dashyAngular');
+    var app = angular.module('veronicaApp');
 
     app.controller('JobsCtrl', [
         '$scope', '$http', '$location',

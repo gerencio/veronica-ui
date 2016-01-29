@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	angular.module('dashyAngular')
+	angular.module('veronicaApp')
 	.directive('todolist',function(){
 			return {
 			templateUrl:'scripts/directives/to-do-list/to-do.html?v='+window.app_version,
