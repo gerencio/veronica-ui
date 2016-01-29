@@ -3,6 +3,7 @@
 
     var mesosServices = angular.module('mesos.services', []);
 
+
     mesosServices.service('$alert', ['$rootScope', function($rootScope) {
         // Types taken from Bootstraps v3's "Alerts"[1] so the type can be used
         // as the class name.
@@ -68,6 +69,212 @@
             }
         });
     }]);
+
+
+    function Misc(){}
+
+    Misc.prototype.hasSelectedText = function hasSelectedText() {
+        if (window.getSelection) {  // All browsers except IE before version 9.
+            var range = window.getSelection();
+            return range.toString().length > 0;
+        }
+        return false;
+    };
+    // Invokes the pailer for the specified host and path using the
+    // specified window_title.
+    Misc.prototype.pailer = function pailer(host, path, window_title) {
+        var url = '//' + host + '/files/read.json?path=' + path;
+        var pailer =
+            window.open('/views/pages/mesos/pailer.html', url, 'width=580px, height=700px');
+
+        // Need to use window.onload instead of document.ready to make
+        // sure the title doesn't get overwritten.
+        pailer.onload = function() {
+            // pailer.document.title = window_title + ' (' + host + ')';
+            //console.log(window_title);
+        };
+    };
+    Misc.prototype.updateInterval = function updateInterval(num_slaves) {
+        // TODO(bmahler): Increasing the update interval for large clusters
+        // is done purely to mitigate webui performance issues. Ideally we can
+        // keep a consistently fast rate for updating statistical information.
+        // For the full system state updates, it may make sense to break
+        // it up using pagination and/or splitting the endpoint.
+        if (num_slaves < 500) {
+            return 10000;
+        } else if (num_slaves < 1000) {
+            return 20000;
+        } else if (num_slaves < 5000) {
+            return 60000;
+        } else if (num_slaves < 10000) {
+            return 120000;
+        } else if (num_slaves < 15000) {
+            return 240000;
+        } else if (num_slaves < 20000) {
+            return 480000;
+        } else {
+            return 960000;
+        }
+    };
+    Misc.prototype.update = function update($scope, $timeout, data) {
+        // Don't do anything if the data hasn't changed.
+        if ($scope.data === data) {
+            return true; // Continue polling.
+        }
+
+        $scope.state = JSON.parse(data);
+
+        // Determine if there is a leader (and redirect if not the leader).
+        if ($scope.state.leader) {
+
+            // Redirect if we aren't the leader.
+            if ($scope.state.leader !== $scope.state.pid) {
+                $scope.redirect = 6000;
+                $("#not-leader-alert").removeClass("hide");
+
+                var countdown = function() {
+                    if ($scope.redirect === 0) {
+                        // TODO(benh): Use '$window'.
+                        window.location = '/mesos/master/redirect';
+                    } else {
+                        $scope.redirect = $scope.redirect - 1000;
+                        $timeout(countdown, 1000);
+                    }
+                };
+                countdown();
+                return false; // Don't continue polling.
+            }
+        }
+
+        // A cluster is named if the state returns a non-empty string name.
+        // Track whether this cluster is named in a Boolean for display purposes.
+        $scope.clusterNamed = !!$scope.state.cluster;
+
+        // Check for selected text, and allow up to 20 seconds to pass before
+        // potentially wiping the user highlighted text.
+        // TODO(bmahler): This is to avoid the annoying loss of highlighting when
+        // the tables update. Once we can have tighter granularity control on the
+        // angular.js dynamic table updates, we should remove this hack.
+        $scope.time_since_update += $scope.delay;
+
+        if (this.hasSelectedText() && $scope.time_since_update < 20000) {
+            return true;
+        }
+
+        $scope.data = data;
+
+        // Pass this pollTime to all relativeDate calls to make them all relative to
+        // the same moment in time.
+        //
+        // If relativeDate is called without a reference time, it instantiates a new
+        // Date to be the reference. Since there can be hundreds of dates on a given
+        // page, they would all be relative to slightly different moments in time.
+        $scope.pollTime = new Date();
+
+        // Update the maps.
+        $scope.slaves = {};
+        $scope.frameworks = {};
+        $scope.offers = {};
+        $scope.completed_frameworks = {};
+        $scope.active_tasks = [];
+        $scope.completed_tasks = [];
+
+        // Update the stats.
+        $scope.cluster = $scope.state.cluster;
+        $scope.total_cpus = 0;
+        $scope.total_mem = 0;
+        $scope.used_cpus = 0;
+        $scope.used_mem = 0;
+        $scope.offered_cpus = 0;
+        $scope.offered_mem = 0;
+
+        $scope.staged_tasks = $scope.state.staged_tasks;
+        $scope.started_tasks = $scope.state.started_tasks;
+        $scope.finished_tasks = $scope.state.finished_tasks;
+        $scope.killed_tasks = $scope.state.killed_tasks;
+        $scope.failed_tasks = $scope.state.failed_tasks;
+        $scope.lost_tasks = $scope.state.lost_tasks;
+
+        $scope.activated_slaves = $scope.state.activated_slaves;
+        $scope.deactivated_slaves = $scope.state.deactivated_slaves;
+
+        _.each($scope.state.slaves, function(slave) {
+            $scope.slaves[slave.id] = slave;
+            $scope.total_cpus += slave.resources.cpus;
+            $scope.total_mem += slave.resources.mem;
+        });
+
+        var setTaskMetadata = function(task) {
+            if (!task.executor_id) {
+                task.executor_id = task.id;
+            }
+            if (task.statuses.length > 0) {
+                task.start_time = task.statuses[0].timestamp * 1000;
+                task.finish_time =
+                    task.statuses[task.statuses.length - 1].timestamp * 1000;
+            }
+        };
+
+        _.each($scope.state.frameworks, function(framework) {
+            $scope.frameworks[framework.id] = framework;
+
+            _.each(framework.offers, function(offer) {
+                $scope.offers[offer.id] = offer;
+                $scope.offered_cpus += offer.resources.cpus;
+                $scope.offered_mem += offer.resources.mem;
+                offer.framework_name = $scope.frameworks[offer.framework_id].name;
+                offer.hostname = $scope.slaves[offer.slave_id].hostname;
+            });
+
+            $scope.used_cpus += framework.resources.cpus;
+            $scope.used_mem += framework.resources.mem;
+
+            framework.cpus_share = 0;
+            if ($scope.total_cpus > 0) {
+                framework.cpus_share = framework.resources.cpus / $scope.total_cpus;
+            }
+
+            framework.mem_share = 0;
+            if ($scope.total_mem > 0) {
+                framework.mem_share = framework.resources.mem / $scope.total_mem;
+            }
+
+            framework.max_share = Math.max(framework.cpus_share, framework.mem_share);
+
+            // If the executor ID is empty, this is a command executor with an
+            // internal executor ID generated from the task ID.
+            // TODO(brenden): Remove this once
+            // https://issues.apache.org/jira/browse/MESOS-527 is fixed.
+            _.each(framework.tasks, setTaskMetadata);
+            _.each(framework.completed_tasks, setTaskMetadata);
+
+            $scope.active_tasks = $scope.active_tasks.concat(framework.tasks);
+            $scope.completed_tasks =
+                $scope.completed_tasks.concat(framework.completed_tasks);
+        });
+
+        _.each($scope.state.completed_frameworks, function(framework) {
+            $scope.completed_frameworks[framework.id] = framework;
+
+            _.each(framework.completed_tasks, setTaskMetadata);
+        });
+
+        $scope.used_cpus -= $scope.offered_cpus;
+        $scope.used_mem -= $scope.offered_mem;
+
+        $scope.idle_cpus = $scope.total_cpus - ($scope.offered_cpus + $scope.used_cpus);
+        $scope.idle_mem = $scope.total_mem - ($scope.offered_mem + $scope.used_mem);
+
+        $scope.time_since_update = 0;
+        $scope.$broadcast('state_updated');
+
+        return true; // Continue polling.
+    };
+
+    mesosServices.service('$misc', [Misc]);
+
+
+
 
     var uiModalDialog = angular.module('ui.bootstrap.dialog', ['ui.bootstrap']);
     uiModalDialog
