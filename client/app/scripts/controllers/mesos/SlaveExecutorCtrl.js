@@ -4,8 +4,8 @@
     var mesosApp = angular.module('veronicaApp');
 
     mesosApp.controller('SlaveExecutorCtrl', [
-        '$scope', '$stateParams', '$http', '$q', '$timeout', 'top',
-        function($scope, $stateParams, $http, $q, $timeout, $top) {
+        '$scope', '$stateParams', '$http', '$q', '$timeout', 'top', '$resources',
+        function($scope, $stateParams, $http, $q, $timeout, $top, $resources) {
             $scope.slave_id = $stateParams.slave_id;
             $scope.framework_id = $stateParams.framework_id;
             $scope.executor_id = $stateParams.executor_id;
@@ -20,55 +20,97 @@
                 var pid = $scope.slaves[$stateParams.slave_id].pid;
                 var hostname = $scope.slaves[$stateParams.slave_id].hostname;
                 var id = pid.substring(0, pid.indexOf('@'));
-                var host = hostname + ":" + pid.substring(pid.lastIndexOf(':') + 1);
+                var host = 'http://' + hostname + ":" + pid.substring(pid.lastIndexOf(':') + 1);
 
                 // Set up polling for the monitor if this is the first update.
                 if (!$top.started()) {
                     $top.start(host, $scope);
                 }
 
-                $http.jsonp('//' + host + '/' + id + '/state.json?jsonp=JSON_CALLBACK')
-                    .success(function (response) {
-                        $scope.state = response;
+                $resources.slaveState(host,id)
+                .then(function (response) {
+                    $scope.state = response;
 
-                        $scope.slave = {};
+                    $scope.slave = {};
 
-                        function matchFramework(framework) {
-                            return $scope.framework_id === framework.id;
-                        }
+                    function matchFramework(framework) {
+                        return $scope.framework_id === framework.id;
+                    }
 
-                        // Find the framework; it's either active or completed.
-                        $scope.framework =
-                            _.find($scope.state.frameworks, matchFramework) ||
-                            _.find($scope.state.completed_frameworks, matchFramework);
+                    // Find the framework; it's either active or completed.
+                    $scope.framework =
+                        _.find($scope.state.frameworks, matchFramework) ||
+                        _.find($scope.state.completed_frameworks, matchFramework);
 
-                        if (!$scope.framework) {
-                            $scope.alert_message = 'No framework found with ID: ' + $stateParams.framework_id;
-                            $('#alert').show();
-                            return;
-                        }
-
-                        function matchExecutor(executor) {
-                            return $scope.executor_id === executor.id;
-                        }
-
-                        // Look for the executor; it's either active or completed.
-                        $scope.executor =
-                            _.find($scope.framework.executors, matchExecutor) ||
-                            _.find($scope.framework.completed_executors, matchExecutor);
-
-                        if (!$scope.executor) {
-                            $scope.alert_message = 'No executor found with ID: ' + $stateParams.executor_id;
-                            $('#alert').show();
-                            return;
-                        }
-
-                        $('#slave').show();
-                    })
-                    .error(function (reason) {
-                        $scope.alert_message = 'Failed to get slave usage / state: ' + reason;
+                    if (!$scope.framework) {
+                        $scope.alert_message = 'No framework found with ID: ' + $routeParams.framework_id;
                         $('#alert').show();
-                    });
+                        return;
+                    }
+
+                    function matchExecutor(executor) {
+                        return $scope.executor_id === executor.id;
+                    }
+
+                    // Look for the executor; it's either active or completed.
+                    $scope.executor =
+                        _.find($scope.framework.executors, matchExecutor) ||
+                        _.find($scope.framework.completed_executors, matchExecutor);
+
+                    if (!$scope.executor) {
+                        $scope.alert_message = 'No executor found with ID: ' + $routeParams.executor_id;
+                        $('#alert').show();
+                        return;
+                    }
+
+                    $('#slave').show();
+                }).catch(function (reason) {
+                        $scope.alert_message = 'Failed to get slave usage / state: ' + reason.message;
+                        $('#alert').show();
+                });
+
+            //    $http.jsonp('//' + host + '/' + id + '/state?jsonp=JSON_CALLBACK')
+            //        .success(function (response) {
+            //            $scope.state = response;
+            //
+            //            $scope.slave = {};
+            //
+            //            function matchFramework(framework) {
+            //                return $scope.framework_id === framework.id;
+            //            }
+            //
+            //            // Find the framework; it's either active or completed.
+            //            $scope.framework =
+            //                _.find($scope.state.frameworks, matchFramework) ||
+            //                _.find($scope.state.completed_frameworks, matchFramework);
+            //
+            //            if (!$scope.framework) {
+            //                $scope.alert_message = 'No framework found with ID: ' + $routeParams.framework_id;
+            //                $('#alert').show();
+            //                return;
+            //            }
+            //
+            //            function matchExecutor(executor) {
+            //                return $scope.executor_id === executor.id;
+            //            }
+            //
+            //            // Look for the executor; it's either active or completed.
+            //            $scope.executor =
+            //                _.find($scope.framework.executors, matchExecutor) ||
+            //                _.find($scope.framework.completed_executors, matchExecutor);
+            //
+            //            if (!$scope.executor) {
+            //                $scope.alert_message = 'No executor found with ID: ' + $routeParams.executor_id;
+            //                $('#alert').show();
+            //                return;
+            //            }
+            //
+            //            $('#slave').show();
+            //        })
+            //        .error(function (reason) {
+            //            $scope.alert_message = 'Failed to get slave usage / state: ' + reason;
+            //            $('#alert').show();
+            //        });
             };
 
             if ($scope.state) {

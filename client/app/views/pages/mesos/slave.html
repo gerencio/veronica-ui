@@ -10,7 +10,7 @@
 </ol>
 
 <div class="alert alert-error hide" id="alert">
-    <button class="close" data-dismiss="alert">Ã—</button>
+    <button class="close" data-dismiss="alert">x</button>
     <strong>{{alert_message}}</strong>
 </div>
 
@@ -153,7 +153,7 @@
             <tbody>
             <tr ng-repeat="completed_framework in $data">
                 <td>
-                    <a href="{{'#/slaves/' + slave_id + '/frameworks/' + completed_framework.id}}">
+                    <a href="{{'#/page/mesos/slaves/' + slave_id + '/frameworks/' + completed_framework.id}}">
                         {{completed_framework.id}}</a>
                 </td>
                 <td>{{completed_framework.user}}</td>

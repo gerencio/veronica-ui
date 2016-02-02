@@ -3,7 +3,7 @@
 
     var mesosApp = angular.module('veronicaApp');
 
-    mesosApp.controller('MesosHomeCtrl', function($scope,$misc) {
+    mesosApp.controller('MesosHomeCtrl', function($dialog, $scope,$misc , $pailer) {
         $scope.log = function($event) {
             if (!$scope.state.external_log_file && !$scope.state.log_dir) {
                 $dialog.messageBox(
@@ -12,10 +12,11 @@
                     [{label: 'Continue'}]
                 ).open();
             } else {
-                $misc.pailer(
-                    $scope.$location.host() + ':' + $scope.$location.port(),
-                    '/mesos/master/log',
-                    'Mesos Master');
+                $pailer.messageBox(
+                    'Logs',
+                    null,
+                    '/master/log'
+                ).open();
             }
         };
     });

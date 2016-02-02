@@ -1,0 +1,11 @@
+<div class="modal-header">
+        <h4 class="modal-title">{{ title }}</h4>
+</div>
+<div class="modal-body" id="pailer-data" style="max-height: 400px; overflow-y: scroll">
+    <div data-ng-repeat="msg in messages"><p>{{ msg }}</p><hr></div>
+</div>
+<div class="modal-footer">
+    <a data-ng-repeat="btn in buttons" data-ng-click="btn.click();$close(btn.result)" class="btn btn-default">
+        {{ btn.label }}
+    </a>
+</div>

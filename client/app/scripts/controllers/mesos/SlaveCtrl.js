@@ -4,8 +4,8 @@
     var mesosApp = angular.module('veronicaApp');
 
     mesosApp.controller('SlaveCtrl', [
-        '$dialog', '$scope', '$stateParams', '$http', '$q', '$timeout', 'top', '$misc',
-        function($dialog, $scope, $stateParams, $http, $q, $timeout, $top , $misc) {
+        '$dialog', '$scope', '$stateParams', '$http', '$q', '$timeout', 'top', '$pailer', '$misc', '$resources',
+        function($dialog, $scope, $stateParams, $http, $q, $timeout, $top, $pailer , $misc, $resources) {
             $scope.slave_id = $stateParams.slave_id;
 
             var update = function() {
@@ -18,7 +18,7 @@
                 var pid = $scope.slaves[$stateParams.slave_id].pid;
                 var hostname = $scope.slaves[$stateParams.slave_id].hostname;
                 var id = pid.substring(0, pid.indexOf('@'));
-                var host = hostname + ":" + pid.substring(pid.lastIndexOf(':') + 1);
+                var host = 'http://' + hostname + ":" + pid.substring(pid.lastIndexOf(':') + 1);
 
                 $scope.log = function($event) {
                     if (!$scope.state.external_log_file && !$scope.state.log_dir) {
@@ -28,7 +28,11 @@
                             [{label: 'Continue'}]
                         ).open();
                     } else {
-                        $misc.pailer(host, '/slave/log', 'Mesos Slave');
+                        $pailer.messageBox(
+                            'Logs',
+                            host,
+                            '/slave/log'
+                        ).open();
                     }
                 };
 
@@ -37,17 +41,14 @@
                     $top.start(host, $scope);
                 }
 
-                $http.jsonp('//' + host + '/' + id + '/state.json?jsonp=JSON_CALLBACK')
-                    .success(function (response) {
+
+                $resources.slaveState(host,id)
+                    .then(function (response) {
                         $scope.state = response;
 
                         $scope.slave = {};
                         $scope.slave.frameworks = {};
                         $scope.slave.completed_frameworks = {};
-
-                        $scope.slave.staging_tasks = 0;
-                        $scope.slave.starting_tasks = 0;
-                        $scope.slave.running_tasks = 0;
 
                         // Computes framework stats by setting new attributes on the 'framework'
                         // object.
@@ -55,11 +56,13 @@
                             framework.num_tasks = 0;
                             framework.cpus = 0;
                             framework.mem = 0;
+                            framework.disk = 0;
 
                             _.each(framework.executors, function(executor) {
                                 framework.num_tasks += _.size(executor.tasks);
                                 framework.cpus += executor.resources.cpus;
                                 framework.mem += executor.resources.mem;
+                                framework.disk += executor.resources.disk;
                             });
                         }
 
@@ -76,11 +79,30 @@
                         });
 
                         $('#slave').show();
-                    })
-                    .error(function(reason) {
-                        $scope.alert_message = 'Failed to get slave usage / state: ' + reason;
+                    }).catch(function(reason) {
+                        $scope.alert_message = 'Failed to get slave usage / state: ' + reason.message;
                         $('#alert').show();
-                    });
+                });
+
+
+
+
+
+                $resources.slaveMetricsSnapShot(host)
+                .then(function (response) {
+                    if (!$scope.state) {
+                        $scope.state = {};
+                    }
+                    $scope.state.staged_tasks = response['slave/tasks_staging'];
+                    $scope.state.started_tasks = response['slave/tasks_starting'];
+                    $scope.state.finished_tasks = response['slave/tasks_finished'];
+                    $scope.state.killed_tasks = response['slave/tasks_killed'];
+                    $scope.state.failed_tasks = response['slave/tasks_failed'];
+                    $scope.state.lost_tasks = response['slave/tasks_lost'];
+                }).catch(function(reason) {
+                    $scope.alert_message = 'Failed to get slave metrics: ' + reason.message;
+                    $('#alert').show();
+                });
             };
 
             if ($scope.state) {

@@ -9,13 +9,14 @@
    * Controller of veronicaApp
    */
   angular.module('veronicaApp')
-    .controller('DashboardCtrl', function($scope, $state) {
+    .controller('LoginCtrl', function($scope, $location) {
 
-      $scope.$state = $state;
+      $scope.submit = function() {
 
-      $scope.date = new Date();
-      $scope.eventSources = [];
+        $location.path('/main');
 
+        return false;
+      };
 
     });
 

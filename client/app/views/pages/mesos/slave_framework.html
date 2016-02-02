@@ -14,7 +14,7 @@
 </ol>
 
 <div class="alert alert-error hide" id="alert">
-    <button class="close" data-dismiss="alert">Ã—</button>
+    <button class="close" data-dismiss="alert">x</button>
     <strong>{{alert_message}}</strong>
 </div>
 
@@ -87,7 +87,7 @@
             <tbody>
             <tr ng-repeat="executor in $data">
                 <td>
-                    <a href="{{'#/slaves/' + slave_id + '/frameworks/' + framework.id + '/executors/' + executor.id}}">
+                    <a href="{{'#/page/mesos/slaves/' + slave_id + '/frameworks/' + framework.id + '/executors/' + executor.id}}">
                         {{executor.id}}
                     </a>
                 </td>
@@ -100,7 +100,7 @@
                 <td>{{monitor.frameworks[framework.id].executors[executor.id].statistics.mem_rss_bytes | dataSize}} /
                     {{executor.resources.mem * (1024 * 1024) | dataSize}}</td>
                 <td>
-                    <a href="{{'#/slaves/' + slave_id + '/browse?path=' +
+                    <a href="{{'#/page/mesos/slaves/' + slave_id + '/browse?path=' +
                        encodeURIComponent(executor.directory)}}">
                         Sandbox
                     </a>
@@ -122,14 +122,14 @@
             <tbody>
             <tr ng-repeat="completed_executor in $data">
                 <td>
-                    <a href="{{'#/slaves/' + slave_id + '/frameworks/' + framework.id + '/executors/' + completed_executor.id}}">
+                    <a href="{{'#/page/mesos/slaves/' + slave_id + '/frameworks/' + framework.id + '/executors/' + completed_executor.id}}">
                         {{completed_executor.id}}
                     </a>
                 </td>
                 <td>{{completed_executor.name}}</td>
                 <td>{{completed_executor.source}}</td>
                 <td>
-                    <a href="{{'#/slaves/' + slave_id + '/browse?path=' +
+                    <a href="{{'#/page/mesos/slaves/' + slave_id + '/browse?path=' +
                        encodeURIComponent(completed_executor.directory)}}">
                         browse
                     </a>

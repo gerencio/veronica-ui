@@ -10,7 +10,7 @@
 
 				controller: function($scope){
 
-					$scope.selectedMenu = 'dashboard';
+					$scope.selectedMenu = 'main';
 					$scope.showingSubNav = 0;
 
 					$scope.showSubNav = function(x){

@@ -11,9 +11,6 @@
     */
     window.app_version = 2;
     /*'base64'  analisar o codigo inserido */
-
-
-
     angular
     .module('veronicaApp', [
         'ngRoute',
@@ -41,10 +38,10 @@
       }])
         .config(function($stateProvider, $urlRouterProvider) {
 
-            $urlRouterProvider.when('/dashboard', '/dashboard/home');
-            $urlRouterProvider.otherwise('/dashboard');
+            $urlRouterProvider
+                .when('/mesos', '/page/mesos/home')
+                .when('/jobs', '/page/jobs/home');
             $stateProvider
-
                 .state('plain', {
                     abstract: true,
                     url: '',
@@ -62,43 +59,36 @@
                     templateUrl: 'views/pages/login.html?v='+window.app_version,
                     controller: 'LoginCtrl'
                 })
-                .state('dashboard', {
-                    url: '/dashboard',
+                .state('page', {
+                    url: '/page',
                     parent: 'plain',
-                    templateUrl: 'views/layouts/dashboard.html?v='+window.app_version,
-                    controller: 'DashboardCtrl'
+                    templateUrl: 'views/layouts/page.html?v='+window.app_version,
+                    controller: 'PageCtrl'
                 })
                 .state('home', {
                     url: '/home',
-                    parent: 'dashboard',
-                    templateUrl: 'views/pages/dashboard/home.html?v='+window.app_version,
+                    parent: 'page',
+                    templateUrl: 'views/pages/main/home.html?v='+window.app_version,
                     controller: 'HomeCtrl',
                     controllerAs: 'home'
                 })
                 .state('jobs', {
                     url: '/jobs',
-                    parent: 'dashboard',
+                    parent: 'page',
                     templateUrl: 'views/pages/jobs/jobs.html?v='+window.app_version,
                     controller: 'JobsCtrl'
                 })
-
                 .state('mesos', {
                     url: '/mesos',
-                    parent: 'dashboard',
+                    parent: 'page',
                     templateUrl: 'views/pages/mesos/mesos.html?v='+window.app_version,
                     controller: 'MainCntl'
                 })
                 .state('homeMesos', {
-                    url: '/homeMesos',
+                    url: '/home',
                     parent: 'mesos',
                     templateUrl: 'views/pages/mesos/home.html?v='+window.app_version,
                     controller: 'MesosHomeCtrl'
-                })
-                .state('frameworks', {
-                    url: '/frameworks',
-                    parent: 'mesos',
-                    templateUrl: 'views/pages/mesos/frameworks.html?v='+window.app_version,
-                    controller: 'FrameworksCtrl'
                 })
                 .state('frameworks/:id', {
                     url: '/frameworks/:id',
@@ -106,22 +96,16 @@
                     templateUrl: 'views/pages/mesos/framework.html?v='+window.app_version,
                     controller: 'FrameworkCtrl'
                 })
-                .state('slaves', {
-                    url: '/slaves',
+                .state('frameworks', {
+                    url: '/frameworks',
                     parent: 'mesos',
-                    templateUrl: 'views/pages/mesos/slaves.html?v='+window.app_version,
-                    controller: 'SlavesCtrl'
-                })
-                .state('slaves/:slave_id', {
-                    url: '/slaves/:slave_id',
-                    parent: 'mesos',
-                    templateUrl: 'views/pages/mesos/slave.html?v='+window.app_version,
-                    controller: 'SlaveCtrl'
+                    templateUrl: 'views/pages/mesos/frameworks.html?v='+window.app_version,
+                    controller: 'FrameworksCtrl'
                 })
                 .state('slaves/:slave_id/frameworks/:framework_id', {
                     url: '/slaves/:slave_id/frameworks/:framework_id',
                     parent: 'mesos',
-                    templateUrl: 'views/pages/mesos/slaves.html?v='+window.app_version,
+                    templateUrl: 'views/pages/mesos/slave_framework.html?v='+window.app_version,
                     controller: 'SlaveFrameworkCtrl'
                 })
                 .state('slaves/:slave_id/frameworks/:framework_id/executors/:executor_id', {
@@ -142,8 +126,18 @@
                     templateUrl: 'views/pages/mesos/browse.html?v='+window.app_version,
                     controller: 'BrowseCtrl'
                 })
-
-
+                .state('slaves/:slave_id', {
+                    url: '/slaves/:slave_id',
+                    parent: 'mesos',
+                    templateUrl: 'views/pages/mesos/slave.html?v='+window.app_version,
+                    controller: 'SlaveCtrl'
+                })
+                .state('slaves', {
+                    url: '/slaves',
+                    parent: 'mesos',
+                    templateUrl: 'views/pages/mesos/slaves.html?v='+window.app_version,
+                    controller: 'SlavesCtrl'
+                })
                 .state('offers', {
                     url: '/offers',
                     parent: 'mesos',
@@ -160,6 +154,7 @@
                     parent: 'boxed',
                     templateUrl: 'views/pages/500-page.html?v='+window.app_version
                 });
+            $urlRouterProvider.otherwise('/page/mesos/home');
 
         })
         .run(function(){
@@ -240,24 +235,6 @@
                 }
             };
         })
-
-
-        .directive('pailer', [
-            function () {
-
-                return {
-                    restrict: 'E',
-                    templateUrl: 'views/pages/mesos/pailer.html',
-                    scope: {
-                        path: '@'
-                    }
-                };
-
-            }
-        ])
-
-
-
         .directive('mTimestamp', [ '$rootScope', function($rootScope) {
             return {
                 restrict: 'E',
@@ -281,9 +258,6 @@
                 templateUrl: 'scripts/directives/mesos/timestamp.html'
             };
         }])
-
-
-
         .directive('mTable', ['$compile', '$filter', function($compile, $filter) {
             /* This directive does not have a template. The DOM doesn't like
              * having partially defined tables and so they don't work well with

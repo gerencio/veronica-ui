@@ -85,8 +85,8 @@
     this_.paging = false;
     this_.tailing = true;
 
-    if (!page_size) { $.error('Expecting page_size to be defined'); }
-    if (!truncate_length) { $.error('Expecting truncate_length to be defined'); }
+    page_size || $.error('Expecting page_size to be defined');
+    truncate_length || $.error('Expecting truncate_length to be defined');
 
     this_.page_size = page_size;
     this_.truncate_length = truncate_length;
@@ -119,27 +119,27 @@
     this_.indicate('(LOADING)');
 
     this_.read({'offset': -1})
-      .success(function(data) {
-        this_.indicate('');
-
-        // Get the last page of data.
-        if (data.offset > this_.page_size) {
-          this_.start = this_.end = data.offset - this_.page_size;
-        } else {
-          this_.start = this_.end = 0;
-        }
-
-        this_.initialized = true;
-        this_.element.html('');
-        setTimeout(function() { this_.tail(); }, 0);
-      })
-      .error(function() {
-        this_.indicate('(FAILED TO INITIALIZE ... RETRYING)');
-        setTimeout(function() {
+        .success(function(data) {
           this_.indicate('');
-          this_.initialize();
-        }, 1000);
-      });
+
+          // Get the last page of data.
+          if (data.offset > this_.page_size) {
+            this_.start = this_.end = data.offset - this_.page_size;
+          } else {
+            this_.start = this_.end = 0;
+          }
+
+          this_.initialized = true;
+          this_.element.html('');
+          setTimeout(function() { this_.tail(); }, 0);
+        })
+        .error(function() {
+          this_.indicate('(FAILED TO INITIALIZE ... RETRYING)');
+          setTimeout(function() {
+            this_.indicate('');
+            this_.initialize();
+          }, 1000);
+        });
   };
 
 
@@ -177,45 +177,45 @@
 
     var read = function(offset, length) {
       this_.read({'offset': offset, 'length': length})
-        .success(function(data) {
-          if (data.data.length < length) {
-            buffer += data.data;
-            read(offset + data.data.length, length - data.data.length);
-          } else if (data.data.length > 0) {
-            this_.indicate('(PAGED)');
-            setTimeout(function() { this_.indicate(''); }, 1000);
+          .success(function(data) {
+            if (data.data.length < length) {
+              buffer += data.data;
+              read(offset + data.data.length, length - data.data.length);
+            } else if (data.data.length > 0) {
+              this_.indicate('(PAGED)');
+              setTimeout(function() { this_.indicate(''); }, 1000);
 
-            // Prepend buffer onto data.
-            data.offset -= buffer.length;
-            data.data = buffer + data.data;
+              // Prepend buffer onto data.
+              data.offset -= buffer.length;
+              data.data = buffer + data.data;
 
-            // Truncate to the first newline (unless this is the beginning).
-            if (data.offset !== 0) {
-              var index = data.data.indexOf('\n') + 1;
-              data.offset += index;
-              data.data = data.data.substring(index);
+              // Truncate to the first newline (unless this is the beginning).
+              if (data.offset !== 0) {
+                var index = data.data.indexOf('\n') + 1;
+                data.offset += index;
+                data.data = data.data.substring(index);
+              }
+
+              this_.start = data.offset;
+
+              var scrollTop = this_.element.scrollTop();
+              var scrollHeight = this_.element[0].scrollHeight;
+
+              this_.element.prepend(escapeHTML(data.data));
+
+              scrollTop += this_.element[0].scrollHeight - scrollHeight;
+              this_.element.scrollTop(scrollTop);
+
+              this_.paging = false;
             }
-
-            this_.start = data.offset;
-
-            var scrollTop = this_.element.scrollTop();
-            var scrollHeight = this_.element[0].scrollHeight;
-
-            this_.element.prepend(escapeHTML(data.data));
-
-            scrollTop += this_.element[0].scrollHeight - scrollHeight;
-            this_.element.scrollTop(scrollTop);
-
-            this_.paging = false;
-          }
-        })
-        .error(function() {
-          this_.indicate('(FAILED TO PAGE ... RETRYING)');
-          setTimeout(function() {
-            this_.indicate('');
-            this_.page();
-          }, 1000);
-        });
+          })
+          .error(function() {
+            this_.indicate('(FAILED TO PAGE ... RETRYING)');
+            setTimeout(function() {
+              this_.indicate('');
+              this_.page();
+            }, 1000);
+          });
     };
 
     read(offset, length);
@@ -230,62 +230,62 @@
     }
 
     this_.read({'offset': this_.end, 'length': this_.truncate_length})
-      .success(function(data) {
-        var scrollTop = this_.element.scrollTop();
-        var height = this_.element.height();
-        var scrollHeight = this_.element[0].scrollHeight;
+        .success(function(data) {
+          var scrollTop = this_.element.scrollTop();
+          var height = this_.element.height();
+          var scrollHeight = this_.element[0].scrollHeight;
 
-        // Check if we are still at the bottom (since this event might
-        // have fired before the scroll event has been dispatched).
-        if (scrollTop + height < scrollHeight) {
-          this_.tailing = false;
-          return;
-        }
-
-        if (data.data.length > 0) {
-          // Truncate to the first newline if this is the first time
-          // (and we aren't reading from the beginning of the log).
-          if (this_.start === this_.end && data.offset !== 0) {
-            var index = data.data.indexOf('\n') + 1;
-            data.offset += index;
-            data.data = data.data.substring(index);
-            this_.start = data.offset; // Adjust the actual start too!
+          // Check if we are still at the bottom (since this event might
+          // have fired before the scroll event has been dispatched).
+          if (scrollTop + height < scrollHeight) {
+            this_.tailing = false;
+            return;
           }
 
-          this_.end = data.offset + data.data.length;
+          if (data.data.length > 0) {
+            // Truncate to the first newline if this is the first time
+            // (and we aren't reading from the beginning of the log).
+            if (this_.start === this_.end && data.offset !== 0) {
+              var index = data.data.indexOf('\n') + 1;
+              data.offset += index;
+              data.data = data.data.substring(index);
+              this_.start = data.offset; // Adjust the actual start too!
+            }
 
-          this_.element.append(escapeHTML(data.data));
+            this_.end = data.offset + data.data.length;
 
-          scrollTop += this_.element[0].scrollHeight - scrollHeight;
-          this_.element.scrollTop(scrollTop);
+            this_.element.append(escapeHTML(data.data));
 
-          // Also, only if we're at the bottom, truncate data so that we
-          // don't consume too much memory. TODO(benh): Only do
-          // truncations if we've been at the bottom for a while.
-          this_.truncate();
-        }
+            scrollTop += this_.element[0].scrollHeight - scrollHeight;
+            this_.element.scrollTop(scrollTop);
 
-        // Tail immediately if we got as much data as requested (since
-        // this probably means we've waited around a while). The
-        // alternative here would be to not get data in chunks, but the
-        // potential issue here is that we might end up requesting GB of
-        // log data at a time ... the right solution here might be to do
-        // a request to determine the new ending offset and then request
-        // the proper length.
-        if (data.data.length === this_.truncate_length) {
-          setTimeout(function() { this_.tail(); }, 0);
-        } else {
-          setTimeout(function() { this_.tail(); }, 1000);
-        }
-      })
-      .error(function() {
-        this_.indicate('(FAILED TO TAIL ... RETRYING)');
-        this_.initialized = false;
-        setTimeout(function() {
-          this_.indicate('');
-          this_.initialize();
-        }, 1000);
-      });
+            // Also, only if we're at the bottom, truncate data so that we
+            // don't consume too much memory. TODO(benh): Only do
+            // truncations if we've been at the bottom for a while.
+            this_.truncate();
+          }
+
+          // Tail immediately if we got as much data as requested (since
+          // this probably means we've waited around a while). The
+          // alternative here would be to not get data in chunks, but the
+          // potential issue here is that we might end up requesting GB of
+          // log data at a time ... the right solution here might be to do
+          // a request to determine the new ending offset and then request
+          // the proper length.
+          if (data.data.length === this_.truncate_length) {
+            setTimeout(function() { this_.tail(); }, 0);
+          } else {
+            setTimeout(function() { this_.tail(); }, 1000);
+          }
+        })
+        .error(function() {
+          this_.indicate('(FAILED TO TAIL ... RETRYING)');
+          this_.initialized = false;
+          setTimeout(function() {
+            this_.indicate('');
+            this_.initialize();
+          }, 1000);
+        });
   };
 
 
@@ -325,10 +325,10 @@
       var pailer = $.data(this, 'pailer');
       if (!pailer) {
         pailer = new Pailer(settings.read,
-                            $(this),
-                            settings.indicator,
-                            settings.page_size,
-                            settings.truncate_length);
+            $(this),
+            settings.indicator,
+            settings.page_size,
+            settings.truncate_length);
         $.data(this, 'pailer', pailer);
         pailer.initialize();
       }

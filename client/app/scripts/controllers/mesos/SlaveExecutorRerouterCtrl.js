@@ -52,7 +52,7 @@
             var hostname = $scope.slaves[$stateParams.slave_id].hostname;
             var id = pid.substring(0, pid.indexOf('@'));
             var port = pid.substring(pid.lastIndexOf(':') + 1);
-            var host = hostname + ":" + port;
+            var host = 'http://' + hostname + ":" + port;
 
             // Request slave details to get access to the route executor's "directory"
             // to navigate directly to the executor's sandbox.
@@ -93,7 +93,7 @@
 
                     // Navigate to a path like '/slaves/:id/browse?path=%2Ftmp%2F', the
                     // recognized "browse" endpoint for a slave.
-                    $location.path('/dashboard/mesos/slaves/' + $stateParams.slave_id + '/browse')
+                    $location.path('/main/mesos/slaves/' + $stateParams.slave_id + '/browse')
                         .search({path: executor.directory})
                         .replace();
                 })

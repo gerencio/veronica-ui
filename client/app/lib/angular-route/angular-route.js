@@ -249,7 +249,7 @@ function $RouteProvider() {
 
   this.$get = ['$rootScope',
                '$location',
-               '$routeParams',
+               '$stateParams',
                '$q',
                '$injector',
                '$templateRequest',
@@ -260,7 +260,7 @@ function $RouteProvider() {
      * @ngdoc service
      * @name $route
      * @requires $location
-     * @requires $routeParams
+     * @requires $stateParams
      *
      * @property {Object} current Reference to the current route definition.
      * The route definition contains:
@@ -666,12 +666,12 @@ function $RouteProvider() {
   }];
 }
 
-ngRouteModule.provider('$routeParams', $RouteParamsProvider);
+ngRouteModule.provider('$stateParams', $RouteParamsProvider);
 
 
 /**
  * @ngdoc service
- * @name $routeParams
+ * @name $stateParams
  * @requires $route
  *
  * @description

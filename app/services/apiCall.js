@@ -45,15 +45,27 @@ apiGetErr =  (error,res) => {
 
 apiCall =  (endpoint , user , pass ,token) => ( entity , method ,reqData ) => {
 
-    var uri = endpoint;
     var body = null;
+    var qs = null;
+    var externalHost = null;
+
+    if (reqData && reqData['externalHost']){
+        externalHost = reqData['externalHost'];
+        delete  reqData['externalHost'];
+    }
+
+    var uri = externalHost?externalHost:endpoint;
 
     if ((method === methods.GET || method === methods.DELETE)&&(reqData)){
-        uri += format(entity,reqData)
+        //uri += format(entity,reqData)
+        uri +=  entity;
+        qs = reqData;
     }else{
         uri +=  entity;
         body = reqData
     }
+
+
 
     var options = {
 
@@ -64,6 +76,7 @@ apiCall =  (endpoint , user , pass ,token) => ( entity , method ,reqData ) => {
         },
         method: method,
         json : body,
+        qs: qs,
         resolveWithFullResponse: true
     };
 

@@ -4,7 +4,7 @@
         <a class="badge badge-type" href="#">Master</a>
     </li>
     <li>
-        <a class="badge badge-type" href="#/dashboard/mesos/slaves/{{slave_id}}" title="{{slave_id}}">
+        <a class="badge badge-type" href="#/page/mesos/slaves/{{slave_id}}" title="{{slave_id}}">
             Slave</a>
     </li>
     <li class="active">
@@ -14,7 +14,7 @@
 
 <ol class="breadcrumb">
     <li ng-repeat="dir in path.split('/')">
-        <a href="#/dashboard/mesos/slaves/{{slave_id}}/browse?path={{
+        <a href="#/page/mesos/slaves/{{slave_id}}/browse?path={{
              encodeURIComponent(path.split('/').slice(0, $index + 1).join('/'))}}">
             {{dir}}
         </a>
@@ -22,7 +22,7 @@
 </ol>
 
 <div class="alert alert-error hide" id="alert">
-    <button class="close" data-dismiss="alert">Ã—</button>
+    <button class="close" data-dismiss="alert">x</button>
     <strong>{{alert_message}}</strong>
 </div>
 
@@ -56,7 +56,7 @@
                     <td>
                       <span data-ng-show="file.mode[0] == 'd'">
                         <i class="glyphicon glyphicon-folder-close"></i>
-                        <a href="#/dashboard/mesos/slaves/{{slave_id}}/browse?path={{encodeURIComponent(file.path)}}">
+                        <a href="#/page/mesos/slaves/{{slave_id}}/browse?path={{encodeURIComponent(file.path)}}">
                             {{basename(file.path)}}
                         </a>
                       </span>
