@@ -102,11 +102,11 @@
                     templateUrl: 'views/pages/mesos/frameworks.html?v='+window.app_version,
                     controller: 'FrameworksCtrl'
                 })
-                .state('slaves/:slave_id/frameworks/:framework_id', {
-                    url: '/slaves/:slave_id/frameworks/:framework_id',
+                .state('slaves/:slave_id/frameworks/:framework_id/executors/:executor_id/browse', {
+                    url: '/slaves/:slave_id/frameworks/:framework_id/executors/:executor_id/browse',
                     parent: 'mesos',
-                    templateUrl: 'views/pages/mesos/slave_framework.html?v='+window.app_version,
-                    controller: 'SlaveFrameworkCtrl'
+                    templateUrl: '',
+                    controller: 'SlaveExecutorRerouterCtrl'
                 })
                 .state('slaves/:slave_id/frameworks/:framework_id/executors/:executor_id', {
                     url: '/slaves/:slave_id/frameworks/:framework_id/executors/:executor_id',
@@ -114,11 +114,11 @@
                     templateUrl: 'views/pages/mesos/slave_executor.html?v='+window.app_version,
                     controller: 'SlaveExecutorCtrl'
                 })
-                .state('slaves/:slave_id/frameworks/:framework_id/executors/:executor_id/browse', {
-                    url: '/slaves/:slave_id/frameworks/:framework_id/executors/:executor_id/browse',
+                .state('slaves/:slave_id/frameworks/:framework_id', {
+                    url: '/slaves/:slave_id/frameworks/:framework_id',
                     parent: 'mesos',
-                    templateUrl: '',
-                    controller: 'SlaveExecutorRerouterCtrl'
+                    templateUrl: 'views/pages/mesos/slave_framework.html?v='+window.app_version,
+                    controller: 'SlaveFrameworkCtrl'
                 })
                 .state('slaves/:slave_id/browse', {
                     url: '/slaves/:slave_id/browse',
